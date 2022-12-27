@@ -2,21 +2,21 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#pragma once
+#ifndef DEMO_H
+#define DEMO_H
 
-#include "namespace.h"
-#include <QSize>
-#include <qobject.h>
+#include "dtkbluetooth_global.h"
+#include <QObject>
 
 DBLUETOOTH_BEGIN_NAMESPACE
-class Demo : public QObject {
+class Demo : public QObject
+{
     Q_OBJECT
-  public:
+public:
     Demo(QObject *parent = nullptr);
     ~Demo();
     int add(const int a, const int b);
-
-    // librsvg
-    bool svg2png(const QString &svgfile, const QString &pngfile, QSize size = QSize(128, 128));
 };
 DBLUETOOTH_END_NAMESPACE
+
+#endif

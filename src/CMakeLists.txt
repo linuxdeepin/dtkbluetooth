@@ -2,7 +2,6 @@
 #
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-set(BIN_NAME ${CMAKE_PROJECT_NAME})
 
 file(GLOB_RECURSE INCLUDE_FILES "../include/*.h")
 file(GLOB_RECURSE SRCS
@@ -10,35 +9,41 @@ file(GLOB_RECURSE SRCS
     "./*.cpp"
 )
 
-add_library(${BIN_NAME} SHARED
+add_library(${LIB_NAME} SHARED
     ${INCLUDE_FILES}
     ${SRCS}
 )
 
-include_directories(../include)
+target_include_directories(${LIB_NAME} PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${DtkCore_INCLUDE_DIRS}>)
 
-set_target_properties(${BIN_NAME} PROPERTIES
+target_include_directories(${LIB_NAME} INTERFACE
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
+
+target_compile_definitions(${LIB_NAME} PRIVATE VERSION="${CMAKE_PROJECT_VERSION}")
+
+target_link_libraries(${LIB_NAME} PUBLIC
+    Qt${QT_VERSION_MAJOR}::Core
+    Qt${QT_VERSION_MAJOR}::DBus
+    Qt${QT_VERSION_MAJOR}::Network
+    Dtk::Core
+)
+
+set_target_properties(${LIB_NAME} PROPERTIES
+    EXPORT_NAME Bluetooth
     VERSION ${CMAKE_PROJECT_VERSION}
-    SOVERSION ${CMAKE_PROJECT_VERSION_MAJOR})
+    SOVERSION ${CMAKE_PROJECT_VERSION_MAJOR}
+    PUBLIC_HEADER "${INCLUDE_FILES}")
 
-target_compile_definitions(${BIN_NAME} PRIVATE VERSION="${CMAKE_PROJECT_VERSION}")
-
-find_package(PkgConfig REQUIRED)
-pkg_search_module(RSVG2 REQUIRED librsvg-2.0)
-
-target_include_directories(${BIN_NAME} PUBLIC
-    Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Gui
-    Qt${QT_VERSION_MAJOR}::DBus
-    ${RSVG2_INCLUDE_DIRS}
+install(TARGETS ${LIB_NAME} EXPORT DtkBluetoothTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-target_link_libraries(${BIN_NAME} PRIVATE
-    Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Gui
-    Qt${QT_VERSION_MAJOR}::DBus
-    ${RSVG2_LIBRARIES}
+install(EXPORT DtkBluetoothTargets
+    FILE DtkBluetoothTargets.cmake
+    NAMESPACE Dtk::
+    DESTINATION ${ConfigPackageLocation}
 )
-
-install(FILES ${INCLUDE_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${BIN_NAME})
-install(TARGETS ${BIN_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR})

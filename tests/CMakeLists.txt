@@ -2,13 +2,7 @@
 #
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-set(BIN_NAME ut-dtkbluetooth)
-
-#add_definitions(-DUSE_MOCK_INTERFACE)
-
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-access-control -fno-inline -Wno-pmf-conversions")
-
-include(./dbus/fakeInterface.cmake)
+set(LIB_NAME ut-${LIB_NAME})
 
 file(GLOB_RECURSE INCLUDE_FILES "../include/*.h")
 file(GLOB_RECURSE SRCS
@@ -17,44 +11,40 @@ file(GLOB_RECURSE SRCS
 )
 file(GLOB_RECURSE TEST_FILES "./*.h" "./*.cpp")
 
-include_directories(
-    "../include"
-    "../src/dbus"
-)
+add_compile_definitions(USE_FAKE_INTERFACE)
 
-add_executable(${BIN_NAME}
+add_executable(${LIB_NAME}
     ${INCLUDE_FILES}
     ${SRCS}
     ${TEST_FILES}
-    ${DFAKE_INTERFACE_DBUS_XML}
 )
 
-find_package(PkgConfig REQUIRED)
-pkg_search_module(RSVG2 REQUIRED librsvg-2.0)
-
-target_include_directories(${BIN_NAME} PUBLIC
-    Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Gui
-    Qt${QT_VERSION_MAJOR}::DBus
-    ${RSVG2_INCLUDE_DIRS}
+target_include_directories(${LIB_NAME} PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/src
+    ${PROJECT_SOURCE_DIR}/src/dbus
+    ${PROJECT_SOURCE_DIR}/tests/fakeDBus
 )
 
-target_link_libraries(${BIN_NAME} PRIVATE
+target_link_libraries(${LIB_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
-    Qt${QT_VERSION_MAJOR}::Gui
     Qt${QT_VERSION_MAJOR}::DBus
-    ${RSVG2_LIBRARIES}
-    -lpthread
-    -lgcov
-    -lgtest
+    Qt${QT_VERSION_MAJOR}::Network
+    Dtk::Core
+    pthread
+    gcov
+    gtest
+    gmock
 )
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${BIN_NAME} PRIVATE -fprofile-instr-generate -ftest-coverage)
+    target_compile_options(${LIB_NAME} PRIVATE -fprofile-instr-generate -ftest-coverage)
 endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(${BIN_NAME} PRIVATE -fprofile-arcs -ftest-coverage)
+    target_compile_options(${LIB_NAME} PRIVATE -fprofile-arcs -ftest-coverage)
 endif()
 
+target_compile_options(${LIB_NAME} PRIVATE -fno-access-control)
+
 enable_testing()
-add_test(NAME ${BIN_NAME} COMMAND ${BIN_NAME})
+add_test(NAME ${LIB_NAME} COMMAND ${LIB_NAME})

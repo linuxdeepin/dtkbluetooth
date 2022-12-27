@@ -1,27 +1,27 @@
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
-#ifndef DFAKEINTERFACE_H
-#define DFAKEINTERFACE_H
+#ifndef DEMOSERVICE_H
+#define DEMOSERVICE_H
 
-#include <QObject>
 #include "ddemotypes.h"
+#include <QObject>
 
-class DFakeInterface : public QObject
+class DemoService : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface","com.deepin.dtk.fakeInterface")
+    Q_CLASSINFO("D-Bus Interface", "com.deepin.dtk.fakeInterface")
     Q_PROPERTY(bool Docked READ Docked WRITE setDocked NOTIFY DockedChanged)
 public:
-    explicit DFakeInterface(QObject *parent = nullptr);
-    virtual ~DFakeInterface();
+    explicit DemoService(QObject *parent = nullptr);
+    virtual ~DemoService();
 
     bool Docked() const;
     void setDocked(bool docked = true);
 public slots:
 
     UserPathList ListUsers();
-    void setListUsers(const UserPathList &list); // addUser ?
+    void setListUsers(const UserPathList &list);
 
 signals:
     void DockedChanged(const bool value);
@@ -33,4 +33,4 @@ private:
     bool m_docked = false;
 };
 
-#endif // DFAKEINTERFACE_H
+#endif  // DemoService_H

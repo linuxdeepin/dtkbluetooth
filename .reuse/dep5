@@ -8,15 +8,10 @@ Files: .clang-format misc/*.in config.sh
 Copyright: None
 License: CC0-1.0
 
-# Readme
-Files: README*.md
-Copyright: None
-License: CC0-1.0
-
 # docs
-Files: docs/*.md
-Copyright: None
-License: CC0-1.0
+Files: *.md *.dox
+Copyright: UnionTech Software Technology Co., Ltd.
+License: CC-BY-4.0
 
 # debian
 Files: debian/*
@@ -28,8 +23,8 @@ Files: .github/* .gitignore
 Copyright: None
 License: CC0-1.0
 
-# cpp-stub
-Files: tests/3rdparty/cpp-stub/*
+# HEADERS
+Files: */include/D*
 Copyright: None
-License: MIT
+License: CC0-1.0
 
