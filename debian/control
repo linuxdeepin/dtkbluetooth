@@ -9,7 +9,8 @@ Build-Depends:
  qhelpgenerator-qt5 | qttools5-dev-tools,
  qtbase5-dev,
  doxygen,
- graphviz
+ graphviz,
+ qtconnectivity5-dev
 Standards-Version: 4.5.0
 
 Package: libdtkbluetooth

@@ -10,8 +10,8 @@ set (VERSION "1.0.0" CACHE STRING "define project version")
 
 project(DtkBluetooth
     LANGUAGES CXX
-    HOMEPAGE_URL https://github.com/linuxdeepin/dtk-template
-    DESCRIPTION "dtk library template"
+    HOMEPAGE_URL https://github.com/linuxdeepin/dtkbluetooth
+    DESCRIPTION "BlueZ DBus interface binding for Qt"
     VERSION ${VERSION}
 )
 
@@ -30,7 +30,8 @@ set(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} "-Wl,--as-needed")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(ConfigPackageLocation ${CMAKE_INSTALL_LIBDIR}/cmake/DtkBluetooth)
-set(CMAKE_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/dtk/DBluetooth)
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/include/dtk${PROJECT_VERSION_MAJOR}/DBluetooth)
+set(LIBRARY_INSATLL_DIR ${CMAKE_INSTALL_LIBDIR})
 # Install settings
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX /usr)
@@ -47,7 +48,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif ()
 
 find_package(QT NAMES Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core DBus Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core DBus Bluetooth)
 find_package(Dtk REQUIRED COMPONENTS Core)
 
 add_subdirectory(src)
@@ -69,7 +70,7 @@ if (BUILD_EXAMPLES)
 endif()
 
 target_link_directories(${LIB_NAME} INTERFACE
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_LIBDIR}>
+    $<INSTALL_INTERFACE:${LIBRARY_INSATLL_DIR}>
 )
 
 write_basic_package_version_file(
@@ -80,8 +81,8 @@ write_basic_package_version_file(
 
 configure_package_config_file(misc/DtkBluetoothConfig.cmake.in
     DtkBluetoothConfig.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/DtkBluetooth
-    PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
+    INSTALL_DESTINATION ${LIBRARY_INSATLL_DIR}/cmake/DtkBluetooth
+    PATH_VARS CMAKE_INSTALL_INCLUDEDIR LIBRARY_INSATLL_DIR
 )
 
 # for pc file config
@@ -90,15 +91,16 @@ set(PC_REQ_PRIVATE)
 set(PC_REQ_PUBLIC)
 
 # config pkgconfig file
-set(PC_REQUIRES "Qt${QT_VERSION_MAJOR}Core Qt${QT_VERSION_MAJOR}DBus Qt${QT_VERSION_MAJOR}Network dtkcore")
+set(PC_REQUIRES "Qt${QT_VERSION_MAJOR}Core Qt${QT_VERSION_MAJOR}DBus Qt${QT_VERSION_MAJOR}Bluetooth dtkcore")
 configure_file(misc/${LIB_NAME}.pc.in ${LIB_NAME}.pc @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LIB_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LIB_NAME}.pc DESTINATION ${LIBRARY_INSATLL_DIR}/pkgconfig)
 # config cmake file
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DtkBluetoothConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/DtkBluetoothConfigVersion.cmake DESTINATION ${ConfigPackageLocation})
 
 # config qmake moudule file
 set(DTK_MODULE ${LIB_NAME})
 set(DTK_DEPS "core dbus network dtkcore")
-set(QMKSPECS_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/qt${QT_VERSION_MAJOR}/mkspecs/modules" CACHE STRING "INSTALL DIR FOR qt pri files")
+set(DTK_CFG "v2 ltcg")
+set(QMKSPECS_INSTALL_DIR "${LIBRARY_INSATLL_DIR}/qt${QT_VERSION_MAJOR}/mkspecs/modules" CACHE STRING "INSTALL DIR FOR qt pri files")
 configure_file(misc/qt_lib_${LIB_NAME}.pri.in qt_lib_${LIB_NAME}.pri @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt_lib_${LIB_NAME}.pri DESTINATION "${QMKSPECS_INSTALL_DIR}")

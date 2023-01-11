@@ -22,14 +22,14 @@ add_executable(${LIB_NAME}
 target_include_directories(${LIB_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/src
-    ${PROJECT_SOURCE_DIR}/src/dbus
+    ${PROJECT_SOURCE_DIR}/src/DBus
     ${PROJECT_SOURCE_DIR}/tests/fakeDBus
 )
 
 target_link_libraries(${LIB_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::DBus
-    Qt${QT_VERSION_MAJOR}::Network
+    Qt${QT_VERSION_MAJOR}::Bluetooth
     Dtk::Core
     pthread
     gcov
