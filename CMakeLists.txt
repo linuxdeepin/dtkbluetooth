@@ -42,8 +42,8 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(BUILD_TESTING ON)
-    set(BUILD_EXAMPLES ON)
+    # set(BUILD_TESTING ON)
+    # set(BUILD_EXAMPLES ON)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
 endif ()
 
@@ -99,7 +99,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/DtkBluetoothConfig.cmake ${CMAKE_CURRE
 
 # config qmake moudule file
 set(DTK_MODULE ${LIB_NAME})
-set(DTK_DEPS "core dbus network dtkcore")
+set(DTK_DEPS "core dbus dtkcore")
 set(DTK_CFG "v2 ltcg")
 set(QMKSPECS_INSTALL_DIR "${LIBRARY_INSATLL_DIR}/qt${QT_VERSION_MAJOR}/mkspecs/modules" CACHE STRING "INSTALL DIR FOR qt pri files")
 configure_file(misc/qt_lib_${LIB_NAME}.pri.in qt_lib_${LIB_NAME}.pri @ONLY)
