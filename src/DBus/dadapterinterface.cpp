@@ -110,4 +110,8 @@ QDBusPendingReply<void> DAdapterInterface::stopDiscovery()
     return m_inter->asyncCall("StopDiscovery");
 }
 
+QString DAdapterInterface::adapterPath() const{
+    return m_inter->path();
+}
+
 DBLUETOOTH_END_NAMESPACE

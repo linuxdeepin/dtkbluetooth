@@ -19,7 +19,6 @@ public:
     explicit DAdapterPrivate(const quint64 adapter, DAdapter *parent = nullptr);
     ~DAdapterPrivate() override;
 
-    QString adapterPath;
     DAdapterInterface *m_adapter{nullptr};
     D_DECLARE_PUBLIC(DAdapter)
 };

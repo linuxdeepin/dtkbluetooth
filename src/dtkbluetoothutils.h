@@ -8,6 +8,8 @@
 #include "dtkbluetooth_global.h"
 #include "dtkbluetoothdbustypes.h"
 #include <QDBusObjectPath>
+#include <QBluetoothUuid>
+#include <QDBusArgument>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -35,6 +37,23 @@ inline QList<QDBusObjectPath> getSpecificObject(const ObjectMap &objects, const 
         }
         if (found)
             ret.append(it.key());
+    }
+    return ret;
+}
+
+inline QList<QBluetoothUuid> getUUIDsList(const ObjectMap &objects, const QStringList &Interfaces){
+    QList<QBluetoothUuid> ret;
+    for(auto it = objects.cbegin(); it != objects.cend(); ++it){
+        bool found{true};
+        const auto &interfaces = it.value();
+        for(const auto &interface : Interfaces){
+            if(interfaces.find(interface) == interfaces.cend()){
+                found = false;
+                break;
+            }
+        }
+        if (found)
+            ret.append(qdbus_cast<QBluetoothUuid>(it.key()));
     }
     return ret;
 }

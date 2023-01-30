@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "dadapter_p.h"
+#include "ddevice.h"
 #include "dtkbluetoothutils.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
@@ -13,11 +14,9 @@ using DTK_CORE_NAMESPACE::emplace_tag;
 DAdapterPrivate::DAdapterPrivate(const quint64 adapterId, DAdapter *parent)
     : DObjectPrivate(parent)
 #ifdef USE_FAKE_INTERFACE
-    , adapterPath("/org/deepin/fakebluez/hci" + QString::number(adapterId))
-    , m_adapter(new DAdapterInterface(adapterPath))
+    , m_adapter(new DAdapterInterface("/org/deepin/fakebluez/hci" + QString::number(adapterId)))
 #else
-    , adapterPath("/org/bluez/hci" + QString::number(adapterId))
-    , m_adapter(new DAdapterInterface(adapterPath))
+    , m_adapter(new DAdapterInterface("/org/bluez/hci" + QString::number(adapterId)))
 #endif
 {
 }
@@ -119,6 +118,11 @@ bool DAdapter::discovering()
     return d->m_adapter->discovering();
 }
 
+DDevice DAdapter::specificDevice(QString deviceAddress){
+    D_DC(DAdapter);
+    return DDevice(d->m_adapter->adapterPath(), deviceAddress);
+}
+
 DExpected<QStringList> DAdapter::devices() const
 {
     D_DC(DAdapter);
@@ -136,7 +140,7 @@ DExpected<QStringList> DAdapter::devices() const
 DExpected<void> DAdapter::removeDevice(const QString &device)
 {
     D_DC(DAdapter);
-    auto reply = d->m_adapter->removeDevice(DeviceAddrToDBusPath(d->adapterPath, device));
+    auto reply = d->m_adapter->removeDevice(DeviceAddrToDBusPath(d->m_adapter->adapterPath(), device));
     reply.waitForFinished();
     if (reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};

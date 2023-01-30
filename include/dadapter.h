@@ -5,6 +5,7 @@
 #ifndef DADAPTER_H
 #define DADAPTER_H
 
+#include "ddevice.h"
 #include "dtkbluetoothtypes.h"
 #include <QScopedPointer>
 #include <DExpected>
@@ -28,15 +29,15 @@ class DAdapter : public QObject, public DObject
 public:
     ~DAdapter() override;
 
-    Q_PROPERTY(QString address READ address)
-    Q_PROPERTY(AddressType addressType READ addressType)
-    Q_PROPERTY(QString name READ name)
-    Q_PROPERTY(QString alias READ alias WRITE setAlias NOTIFY aliasChanged)
-    Q_PROPERTY(bool powered READ powered WRITE setPowered NOTIFY poweredChanged)
-    Q_PROPERTY(bool discoverable READ discoverable WRITE setDiscoverable NOTIFY discoverableChanged)
+    Q_PROPERTY(QString address READ address);
+    Q_PROPERTY(AddressType addressType READ addressType);
+    Q_PROPERTY(QString name READ name);
+    Q_PROPERTY(QString alias READ alias WRITE setAlias NOTIFY aliasChanged);
+    Q_PROPERTY(bool powered READ powered WRITE setPowered NOTIFY poweredChanged);
+    Q_PROPERTY(bool discoverable READ discoverable WRITE setDiscoverable NOTIFY discoverableChanged);
     Q_PROPERTY(
-        quint32 discoverableTimeout READ discoverableTimeout WRITE setDiscoverableTimeout NOTIFY discoverableTimeoutChanged)
-    Q_PROPERTY(bool discovering READ discovering NOTIFY discoveringChanged)
+        quint32 discoverableTimeout READ discoverableTimeout WRITE setDiscoverableTimeout NOTIFY discoverableTimeoutChanged);
+    Q_PROPERTY(bool discovering READ discovering NOTIFY discoveringChanged);
 
     QString address() const;
     AddressType addressType() const;
@@ -50,6 +51,7 @@ public:
     quint32 discoverableTimeout() const;
     void setDiscoverableTimeout(const quint32 discoverableTimeout);
     bool discovering();
+    DDevice specificDevice(QString deviceAddress);
 
 public Q_SLOTS:
     DExpected<void> removeDevice(const QString &device);
