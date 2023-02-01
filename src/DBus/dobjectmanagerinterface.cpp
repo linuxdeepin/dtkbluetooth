@@ -15,6 +15,7 @@ DObjectManagerInterface::DObjectManagerInterface(const QString &service, QObject
     qRegisterMetaType<ObjectMap>("ObjectMap");
     qDBusRegisterMetaType<Interfaces>();
     qRegisterMetaType<Interfaces>("Interfaces");
+
 #ifndef USE_FAKE_INTERFACE
     auto Connection = QDBusConnection::systemBus();
 #else

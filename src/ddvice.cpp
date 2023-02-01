@@ -9,7 +9,10 @@
 #include <dobject.h>
 #include <dobject_p.h>
 #include <dtkcore_global.h>
+#include <qbluetoothuuid.h>
 #include <qdbusextratypes.h>
+#include <QDebug>
+#include <qlist.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -45,6 +48,14 @@ DDevice::DDevice(QString adapterPath, QString deviceAddress,QObject *parent)
     connect(d->m_device, &DDeviceInterface::addressChanged, this, &DDevice::addressChanged);
     connect(d->m_device, &DDeviceInterface::aliasChanged, this, &DDevice::aliasChanged);
     connect(d->m_device, &DDeviceInterface::deviceInfoChanged, this, &DDevice::deviceInfoChanged);
+    connect(d->m_device, &DDeviceInterface::UUIDsChanged, this, [this](const QStringList UUIDs){
+        QList<QBluetoothUuid> ret;
+        for(const auto& i : UUIDs)
+            ret.append(QBluetoothUuid(i));
+        Q_EMIT this->UUIDsChanged(ret);
+    });
+    connect(d->m_device, &DDeviceInterface::iconChanged, this, &DDevice::iconChanged);
+    connect(d->m_device, &DDeviceInterface::nameChanged, this, &DDevice::nameChanged);
 }
 
 DDevice::~DDevice() = default;
@@ -121,6 +132,25 @@ QBluetoothDeviceInfo DDevice::deviceInfo() const
     return d->m_device->deviceInfo();
 }
 
+QList<QBluetoothUuid> DDevice::UUIDs() const{
+    D_DC(DDevice);
+    auto reply = d->m_device->UUIDs();
+    QList<QBluetoothUuid> ret;
+    for(const auto& i : reply)
+        ret.append(QBluetoothUuid(i));
+    return ret;
+}
+QString DDevice::name() const{
+    D_DC(DDevice);
+    return d->m_device->name();
+}
+
+QString DDevice::icon() const{
+    D_DC(DDevice);
+    return d->m_device->icon();
+}
+
+//Methods
 DExpected<void> DDevice::disconnect(){
     D_DC(DDevice);
     auto reply = d->m_device->disconnect();
@@ -152,34 +182,7 @@ DExpected<void> DDevice::pair(){
     D_DC(DDevice);
     auto reply = d->m_device->pair();
     reply.waitForFinished();
-    if (reply.isValid())
-        return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
-    return {};
-}
-
-DExpected<QString> DDevice::name(){
-    D_DC(DDevice);
-    auto reply = d->m_device->name();
-    reply.waitForFinished();
-    if (reply.isValid())
-        return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
-    return reply.value();
-}
-
-DExpected<QString> DDevice::icon(){
-    D_DC(DDevice);
-    auto reply = d->m_device->icon();
-    reply.waitForFinished();
-    if (reply.isValid())
-        return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
-    return reply.value();
-}
-
-DExpected<QList<QBluetoothUuid>> DDevice::UUIDs(){
-    D_DC(DDevice);
-    auto reply = d->m_device->UUIDs();
-    reply.waitForFinished();
-    if (reply.isValid())
+    if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
     return {};
 }
@@ -188,9 +191,9 @@ DExpected<QList<qint16>> DDevice::RSSI(){
     D_DC(DDevice);
     auto reply = d->m_device->RSSI();
     reply.waitForFinished();
-    if (reply.isValid())
+    if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
-    return {};
+    return reply.value();
 }
 
 

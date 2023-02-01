@@ -41,6 +41,9 @@ public:
     Q_PROPERTY(QString address READ address NOTIFY addressChanged);
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged);
     Q_PROPERTY(QBluetoothDeviceInfo deviceInfo READ deviceInfo NOTIFY deviceInfoChanged);
+    Q_PROPERTY(QList<QBluetoothUuid> UUIDs READ UUIDs NOTIFY UUIDsChanged);
+    Q_PROPERTY(QString icon READ icon NOTIFY iconChanged);
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged);
 
     bool blocked() const;
     void setBlocked(const bool &blocked);
@@ -54,15 +57,15 @@ public:
     QString address() const;
     QString alias() const;
     QBluetoothDeviceInfo deviceInfo() const;
+    QList<QBluetoothUuid> UUIDs() const;
+    QString icon() const;
+    QString name() const;
 
 public Q_SLOTS:
     DExpected<void> disconnect();
     DExpected<void> cancelPairing();
     DExpected<void> Connect();
     DExpected<void> pair();
-    DExpected<QString> name();
-    DExpected<QString> icon();
-    DExpected<QList<QBluetoothUuid>> UUIDs();
     DExpected<QList<qint16>> RSSI();
 
 Q_SIGNALS:
@@ -75,7 +78,12 @@ Q_SIGNALS:
     void adapterChanged(const QString adapter);
     void addressChanged(const QString address);
     void aliasChanged(const QString alias);
-    void deviceInfoChanged(const QBluetoothDeviceInfo deviceInfo);
+    void deviceInfoChanged(const QBluetoothDeviceInfo deviceInfo); //TODO: DBluetoothDeviceInfo
+    void UUIDsChanged(const QList<QBluetoothUuid> UUIDs);
+    void iconChanged(const QString icon);
+    void nameChanged(const QString name);
+
+    void removed();
 
 private:
     D_DECLARE_PRIVATE(DDevice);

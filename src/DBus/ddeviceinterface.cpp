@@ -7,7 +7,14 @@
 #include "dadapter.h"
 #include "dtkbluetoothutils.h"
 #include <qbluetoothdeviceinfo.h>
+#include <qbluetoothuuid.h>
+#include <qdbusabstractinterface.h>
 #include <qdbusargument.h>
+#include <QDBusMetaType>
+#include <QMetaType>
+#include <qdbusextratypes.h>
+#include <qdbusmetatype.h>
+#include <qlist.h>
 #include <qobject.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
@@ -22,12 +29,13 @@ DDeviceInterface::DDeviceInterface(QDBusObjectPath path, QObject *parent)
     const auto &Service = QLatin1String(FakeBlueZService);
     auto Connection = QDBusConnection::sessionBus();
 #endif
-    const auto &Interface = QLatin1String(BlueZAdapterInterface);
+    const auto &Interface = QLatin1String(BlueZDeviceInterface);
     m_inter = new DDBusInterface(Service, path.path(), Interface, Connection, this);
 #ifndef USE_FAKE_INTERFACE
     m_inter->connect(
-        &BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceAdded, this, []() {
-            //TODO
+        &BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceRemoved, this, [this](const QDBusObjectPath device) {
+            if(device.path() == this->m_inter->path())
+                Q_EMIT removed();
         });
 #endif
 }
@@ -77,9 +85,42 @@ QString DDeviceInterface::alias() const{
 }
 
 QBluetoothDeviceInfo DDeviceInterface::deviceInfo() const{
-    // TODO return qdbus_cast<QBluetoothDeviceInfo>(m_inter->property("DeviceInfo"));
+    // TODO DBluetoothDeviceInfo
+    //return qdbus_cast<DBluetoothDeviceInfo>(m_inter->property("DeviceInfo"));
 }
 
+QStringList DDeviceInterface::UUIDs() const{
+    return qdbus_cast<QStringList>(m_inter->property("UUIDs"));
+}
+
+QString DDeviceInterface::name() const{
+    return qdbus_cast<QString>(m_inter->property("Name"));
+}
+
+QString DDeviceInterface::icon() const{
+    return qdbus_cast<QString>(m_inter->property("Icon"));
+}
+
+//Methods
+QDBusPendingReply<void> DDeviceInterface::disconnect(){
+    return m_inter->asyncCall("Disconnect");
+}
+
+QDBusPendingReply<void> DDeviceInterface::cancelPairing(){
+    return m_inter->asyncCall("CancelPairing");
+}
+
+QDBusPendingReply<void> DDeviceInterface::Connect(){
+    return m_inter->asyncCall("Connect");
+}
+
+QDBusPendingReply<void> DDeviceInterface::pair(){
+    return m_inter->asyncCall("Pair");
+}
+
+QDBusPendingReply<QList<qint16>> DDeviceInterface::RSSI(){
+    return m_inter->asyncCall("RSSI");
+}
 
 
 DBLUETOOTH_END_NAMESPACE

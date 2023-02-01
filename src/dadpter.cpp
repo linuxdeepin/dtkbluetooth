@@ -128,7 +128,7 @@ DExpected<QStringList> DAdapter::devices() const
     D_DC(DAdapter);
     auto reply = d->m_adapter->devices();
     reply.waitForFinished();
-    if (reply.isValid())
+    if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
     auto DeviceList = getSpecificObject(reply.value(), {QString(BlueZDeviceInterface)});
     QStringList ret;
@@ -142,7 +142,7 @@ DExpected<void> DAdapter::removeDevice(const QString &device)
     D_DC(DAdapter);
     auto reply = d->m_adapter->removeDevice(DeviceAddrToDBusPath(d->m_adapter->adapterPath(), device));
     reply.waitForFinished();
-    if (reply.isValid())
+    if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
     return {};
 }
@@ -152,7 +152,7 @@ DExpected<void> DAdapter::startDiscovery()
     D_DC(DAdapter);
     auto reply = d->m_adapter->startDiscovery();
     reply.waitForFinished();
-    if (reply.isValid())
+    if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
     return {};
 }
@@ -162,7 +162,7 @@ DExpected<void> DAdapter::stopDiscovery()
     D_DC(DAdapter);
     auto reply = d->m_adapter->stopDiscovery();
     reply.waitForFinished();
-    if (reply.isValid())
+    if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
     return {};
 }

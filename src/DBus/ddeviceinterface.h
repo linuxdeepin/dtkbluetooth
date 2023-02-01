@@ -39,6 +39,9 @@ public:
     Q_PROPERTY(QString address READ address NOTIFY addressChanged);
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged);
     Q_PROPERTY(QBluetoothDeviceInfo deviceInfo READ deviceInfo NOTIFY deviceInfoChanged);
+    Q_PROPERTY(QStringList UUIDs READ UUIDs NOTIFY UUIDsChanged);
+    Q_PROPERTY(QString icon READ icon NOTIFY iconChanged);
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged);
 
     bool blocked() const;
     void setBlocked(const bool &blocked);
@@ -52,15 +55,15 @@ public:
     QString address() const;
     QString alias() const;
     QBluetoothDeviceInfo deviceInfo() const;
+    QStringList UUIDs() const;
+    QString icon() const;
+    QString name() const;
 
 public Q_SLOTS:
     QDBusPendingReply<void> disconnect();
     QDBusPendingReply<void> cancelPairing();
     QDBusPendingReply<void> Connect();
     QDBusPendingReply<void> pair();
-    QDBusPendingReply<QString> name();
-    QDBusPendingReply<QString> icon();
-    QDBusPendingReply<QList<QBluetoothUuid>> UUIDs();
     QDBusPendingReply<QList<qint16>> RSSI();
 
 Q_SIGNALS:
@@ -74,6 +77,11 @@ Q_SIGNALS:
     void addressChanged(const QString address);
     void aliasChanged(const QString alias);
     void deviceInfoChanged(const QBluetoothDeviceInfo deviceInfo);
+    void UUIDsChanged(const QStringList UUIDs);
+    void iconChanged(const QString icon);
+    void nameChanged(const QString name);
+
+    void removed();
 
 private:
     DDBusInterface *m_inter{nullptr};
