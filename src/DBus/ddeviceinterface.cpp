@@ -110,7 +110,7 @@ QDBusPendingReply<void> DDeviceInterface::cancelPairing(){
     return m_inter->asyncCall("CancelPairing");
 }
 
-QDBusPendingReply<void> DDeviceInterface::Connect(){
+QDBusPendingReply<void> DDeviceInterface::connect(){
     return m_inter->asyncCall("Connect");
 }
 

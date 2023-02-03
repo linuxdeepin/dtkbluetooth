@@ -33,7 +33,6 @@ public:
     Q_PROPERTY(
         quint32 discoverableTimeout READ discoverableTimeout WRITE setDiscoverableTimeout NOTIFY discoverableTimeoutChanged);
     Q_PROPERTY(bool discovering READ discovering NOTIFY discoveringChanged);
-    Q_PROPERTY(QDBusPendingReply<ObjectMap> devices READ devices);
 
     QString address() const;
     QString addressType() const;
@@ -47,10 +46,10 @@ public:
     quint32 discoverableTimeout() const;
     void setDiscoverableTimeout(const quint32 discoverableTimeout);
     bool discovering() const;
-    QDBusPendingReply<ObjectMap> devices() const;
     QString adapterPath() const;
 
 public Q_SLOTS:
+    QDBusPendingReply<ObjectMap> devices() const;
     QDBusPendingReply<void> removeDevice(const QDBusObjectPath &device);
     QDBusPendingReply<void> startDiscovery();
     QDBusPendingReply<void> stopDiscovery();

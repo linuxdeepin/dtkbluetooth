@@ -151,7 +151,7 @@ QString DDevice::icon() const{
 }
 
 //Methods
-DExpected<void> DDevice::disconnect(){
+DExpected<void> DDevice::disconnectDevice(){
     D_DC(DDevice);
     auto reply = d->m_device->disconnect();
     reply.waitForFinished();
@@ -169,9 +169,9 @@ DExpected<void> DDevice::cancelPairing(){
     return {};
 }
 
-DExpected<void> DDevice::Connect(){
+DExpected<void> DDevice::connectDevice(){
     D_DC(DDevice);
-    auto reply = d->m_device->Connect();
+    auto reply = d->m_device->connect();
     reply.waitForFinished();
     if (reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};

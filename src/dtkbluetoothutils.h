@@ -10,6 +10,8 @@
 #include <QDBusObjectPath>
 #include <QBluetoothUuid>
 #include <QDBusArgument>
+#include <dobextransfer.h>
+#include <qglobal.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -50,6 +52,42 @@ inline QDBusObjectPath DeviceAddrToDBusPath(const QString &adapter, QString devi
 {
     const auto &rawDeviceStr = "/dev_" + device.replace(":", "_");
     return QDBusObjectPath{adapter + rawDeviceStr};
+}
+
+inline QString enumToString(transferStatus transferstatus){
+    QString statusStr;
+    switch (transferstatus) {
+        case queued: statusStr = "queued";
+        break;
+        case active: statusStr = "active";
+        break;
+        case suspended: statusStr = "suspended";
+        break;
+        case complete: statusStr = "complete";
+        break;
+        case error: statusStr = "error";
+        break;
+    }
+    return statusStr;
+}
+
+inline transferStatus stringToenum(QString statusStr){
+    transferStatus transferstatus;
+    if(statusStr == "queued")
+        transferstatus = queued;
+    else if(statusStr == "active")
+        transferstatus = active;
+    else if(statusStr == "suspended")
+        transferstatus = suspended;
+    else if(statusStr == "complete")
+        transferstatus = complete;
+    else
+        transferstatus = error;
+    return transferstatus;
+}
+
+inline quint64 getSessionId(QString pathStr){
+    return pathStr.split("/").last().mid(QString("session").size(), -1).toInt();
 }
 
 DBLUETOOTH_END_NAMESPACE

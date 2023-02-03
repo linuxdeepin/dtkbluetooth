@@ -62,9 +62,9 @@ public:
     QString name() const;
 
 public Q_SLOTS:
-    DExpected<void> disconnect();
+    DExpected<void> disconnectDevice();
     DExpected<void> cancelPairing();
-    DExpected<void> Connect();
+    DExpected<void> connectDevice();
     DExpected<void> pair();
     DExpected<QList<qint16>> RSSI();
 

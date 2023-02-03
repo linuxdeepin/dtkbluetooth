@@ -62,7 +62,7 @@ public:
 public Q_SLOTS:
     QDBusPendingReply<void> disconnect();
     QDBusPendingReply<void> cancelPairing();
-    QDBusPendingReply<void> Connect();
+    QDBusPendingReply<void> connect();
     QDBusPendingReply<void> pair();
     QDBusPendingReply<QList<qint16>> RSSI();
 

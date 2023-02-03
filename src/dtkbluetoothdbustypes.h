@@ -5,14 +5,18 @@
 #include "dtkbluetooth_global.h"
 #include <QMap>
 #include <QDBusObjectPath>
+#include <QPair>
+#include <qdbusextratypes.h>
+#include <qpair.h>
 
 #ifndef TYPES_H
 #define TYPES_H
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
-using ObjectMap = QMap<QDBusObjectPath, QVariantMap>;
+using ObjectMap = QMap<QDBusObjectPath, QMap<QString, QVariantMap>>;
 using Interfaces = QMap<QString, QVariantMap>;
+using fileInfo_p = QPair<QDBusObjectPath, QVariantMap>;
 
 DBLUETOOTH_END_NAMESPACE
 

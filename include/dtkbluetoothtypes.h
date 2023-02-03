@@ -10,10 +10,13 @@
 #include <QMap>
 #include <QVariant>
 #include <QDBusObjectPath>
+#include <qpair.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
 enum class AddressType : quint8 { Public, Random, Unknown };
+
+using fileInfo = QPair<int,QVariantMap>;
 
 DBLUETOOTH_END_NAMESPACE
 

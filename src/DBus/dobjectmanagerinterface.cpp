@@ -35,7 +35,7 @@ DObjectManagerInterface::DObjectManagerInterface(const QString &service, QObject
 }
 
 QDBusPendingReply<ObjectMap> DObjectManagerInterface::getManagedObjects()
-{
+{   
     return m_inter->asyncCall("GetManagedObjects");
 }
 
