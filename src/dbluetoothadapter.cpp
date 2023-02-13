@@ -11,7 +11,7 @@ DBLUETOOTH_BEGIN_NAMESPACE
 using DCORE_NAMESPACE::DUnexpected;
 using DTK_CORE_NAMESPACE::emplace_tag;
 
-DAdapterPrivate::DAdapterPrivate(const quint64 adapterId, DAdapter *parent)
+DAdapterPrivate::DAdapterPrivate(quint64 adapterId, DAdapter *parent)
     : DObjectPrivate(parent)
 #ifdef USE_FAKE_INTERFACE
     , m_adapter(new DAdapterInterface("/org/deepin/fakebluez/hci" + QString::number(adapterId)))
@@ -26,17 +26,23 @@ DAdapterPrivate::~DAdapterPrivate()
     delete m_adapter;
 }
 
-DAdapter::DAdapter(const quint64 adapter, QObject *parent)
+DAdapter::DAdapter(quint64 adapter, QObject *parent)
     : QObject(parent)
     , DObject(*new DAdapterPrivate(adapter, this))
 {
     D_DC(DAdapter);
+    connect(d->m_adapter, &DAdapterInterface::nameChanged, this, &DAdapter::nameChanged);
+    connect(d->m_adapter, &DAdapterInterface::addressTypeChanged, this, [this](const QString &type) {
+        Q_EMIT addressTypeChanged(stringToAddressType(type));
+    });
     connect(d->m_adapter, &DAdapterInterface::aliasChanged, this, &DAdapter::aliasChanged);
     connect(d->m_adapter, &DAdapterInterface::poweredChanged, this, &DAdapter::poweredChanged);
     connect(d->m_adapter, &DAdapterInterface::discoverableChanged, this, &DAdapter::discoverableChanged);
     connect(d->m_adapter, &DAdapterInterface::discoverableTimeoutChanged, this, &DAdapter::discoverableTimeoutChanged);
     connect(d->m_adapter, &DAdapterInterface::discoveringChanged, this, &DAdapter::discoveringChanged);
     connect(d->m_adapter, &DAdapterInterface::removed, this, &DAdapter::removed);
+    connect(d->m_adapter, &DAdapterInterface::deviceAdded, this, &DAdapter::deviceAdded);
+    connect(d->m_adapter, &DAdapterInterface::deviceRemoved, this, &DAdapter::deviceRemoved);
 }
 
 DAdapter::~DAdapter() = default;
@@ -50,12 +56,7 @@ QString DAdapter::address() const
 DDevice::AddressType DAdapter::addressType() const
 {
     D_DC(DAdapter);
-    const auto &type = d->m_adapter->addressType();
-    if (type == "public")
-        return DDevice::AddressType::Public;
-    else if (type == "random")
-        return DDevice::AddressType::Random;
-    return DDevice::AddressType::Unknown;
+    return stringToAddressType(d->m_adapter->addressType());
 }
 
 QString DAdapter::name() const
@@ -78,13 +79,13 @@ QString DAdapter::alias() const
 
 void DAdapter::setAlias(const QString &alias)
 {
-    D_D(DAdapter);
+    D_DC(DAdapter);
     d->m_adapter->setAlias(alias);
 }
 
 void DAdapter::setPowered(const bool powered)
 {
-    D_D(DAdapter);
+    D_DC(DAdapter);
     d->m_adapter->setPowered(powered);
 }
 
@@ -96,7 +97,7 @@ bool DAdapter::discoverable() const
 
 void DAdapter::setDiscoverable(const bool discoverable)
 {
-    D_D(DAdapter);
+    D_DC(DAdapter);
     d->m_adapter->setDiscoverable(discoverable);
 }
 
@@ -108,19 +109,26 @@ quint32 DAdapter::discoverableTimeout() const
 
 void DAdapter::setDiscoverableTimeout(const quint32 discoverableTimeout)
 {
-    D_D(DAdapter);
+    D_DC(DAdapter);
     d->m_adapter->setDiscoverableTimeout(discoverableTimeout);
 }
 
-bool DAdapter::discovering()
+bool DAdapter::discovering() const
 {
     D_DC(DAdapter);
     return d->m_adapter->discovering();
 }
 
-DDevice DAdapter::specificDevice(QString deviceAddress){
+QSharedPointer<DDevice> DAdapter::deviceFromAddress(const QString &deviceAddress) const
+{
     D_DC(DAdapter);
-    return DDevice(d->m_adapter->adapterPath(), deviceAddress);
+    const auto &deviceList = devices().value_or(QStringList{});
+    const auto &adapterPath = d->m_adapter->adapterPath();
+    if (deviceList.empty())
+        return nullptr;
+    if (!deviceList.contains(DeviceAddrToDBusPath(adapterPath, deviceAddress)))
+        return nullptr;
+    return QSharedPointer<DDevice>(new DDevice(adapterPath, deviceAddress));
 }
 
 DExpected<QStringList> DAdapter::devices() const
@@ -130,24 +138,28 @@ DExpected<QStringList> DAdapter::devices() const
     reply.waitForFinished();
     if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
-    auto DeviceList = getSpecificObject(reply.value(), {QString(BlueZDeviceInterface)});
+    auto DeviceList =
+        getSpecificObject(reply.value(),
+                          {QString(BlueZDeviceInterface)},
+                          MapVariantMap{{QString(BlueZDeviceInterface),
+                                         QVariantMap{{QString("Adapter"), QVariant::fromValue(d->m_adapter->adapterPath())}}}});
     QStringList ret;
     for (const auto &device : DeviceList)
         ret.append(DBusPathToDeviceAddr(device));
     return ret;
 }
 
-DExpected<void> DAdapter::removeDevice(const QString &device)
+DExpected<void> DAdapter::removeDevice(const QString &device) const
 {
     D_DC(DAdapter);
-    auto reply = d->m_adapter->removeDevice(DeviceAddrToDBusPath(d->m_adapter->adapterPath(), device));
+    auto reply = d->m_adapter->removeDevice(QDBusObjectPath{DeviceAddrToDBusPath(d->m_adapter->adapterPath(), device)});
     reply.waitForFinished();
     if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
     return {};
 }
 
-DExpected<void> DAdapter::startDiscovery()
+DExpected<void> DAdapter::startDiscovery() const
 {
     D_DC(DAdapter);
     auto reply = d->m_adapter->startDiscovery();
@@ -157,7 +169,7 @@ DExpected<void> DAdapter::startDiscovery()
     return {};
 }
 
-DExpected<void> DAdapter::stopDiscovery()
+DExpected<void> DAdapter::stopDiscovery() const
 {
     D_DC(DAdapter);
     auto reply = d->m_adapter->stopDiscovery();

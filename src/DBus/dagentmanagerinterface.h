@@ -12,12 +12,10 @@
 #include <QDBusObjectPath>
 #include <DDBusInterface>
 #include <QDBusPendingReply>
-#include <qobjectdefs.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
 using DTK_CORE_NAMESPACE::DDBusInterface;
-
 
 class DAgentManagerInterface : public QObject
 {
@@ -26,11 +24,10 @@ public:
     explicit DAgentManagerInterface(QObject *parent = nullptr);
     ~DAgentManagerInterface() override = default;
 
-    QDBusPendingReply<ObjectMap> adapters() const;
-
 public Q_SLOTS:
-    void registerAgent(const QDBusObjectPath &agent);
-    void unregisterAgent(const QDBusObjectPath &agent);
+    QDBusPendingReply<void> registerAgent(const QDBusObjectPath &agent, const QString &cap);
+    QDBusPendingReply<void> requestDefaultAgent(const QDBusObjectPath &agent);
+    QDBusPendingReply<void> unregisterAgent(const QDBusObjectPath &agent);
 
 private:
     DDBusInterface *m_inter{nullptr};

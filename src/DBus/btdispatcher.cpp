@@ -14,7 +14,7 @@ BluetoothDispatcher::BluetoothDispatcher(const QString &Service, QObject *parent
     connect(this->source, &DObjectManagerInterface::InterfacesRemoved, this, &BluetoothDispatcher::dispatchRemoved);
 }
 
-void BluetoothDispatcher::dispatchAdded(const QDBusObjectPath &path, const Interfaces &interfaces)
+void BluetoothDispatcher::dispatchAdded(const QDBusObjectPath &path, const MapVariantMap &interfaces)
 {
     if (interfaces.find(QString(BlueZAdapterInterface)) != interfaces.cend())
         Q_EMIT adapterAdded(path);

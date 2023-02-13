@@ -22,16 +22,16 @@ public:
     BluetoothObexDispatcher(BluetoothObexDispatcher &&) = delete;
 
 public Q_SLOTS:
-    void dispatchAdded(const QDBusObjectPath &path, const Interfaces &interfaces) override;
+    void dispatchAdded(const QDBusObjectPath &path, const MapVariantMap &interfaces) override;
     void dispatchRemoved(const QDBusObjectPath &path, const QStringList &args) override;
 
 Q_SIGNALS:
-    void sessionAdded(const QDBusObjectPath sessions);
-    void sessionRemoved(const QDBusObjectPath sessions);
-    void transferAdded(const QDBusObjectPath transfers);
-    void transferRemoved(const QDBusObjectPath transfers);
-    void objectPushAdded(const QDBusObjectPath objectPushs);
-    void objectPushRemoved(const QDBusObjectPath objectPushs);
+    void sessionAdded(const QDBusObjectPath &sessions);
+    void sessionRemoved(const QDBusObjectPath &sessions);
+    void transferAdded(const QDBusObjectPath &transfers);
+    void transferRemoved(const QDBusObjectPath &transfers);
+    void objectPushAdded(const QDBusObjectPath &objectPushs);
+    void objectPushRemoved(const QDBusObjectPath &objectPushs);
 };
 
 DBLUETOOTH_END_NAMESPACE

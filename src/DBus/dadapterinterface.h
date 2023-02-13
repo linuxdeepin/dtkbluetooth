@@ -24,9 +24,9 @@ public:
     explicit DAdapterInterface(const QString &path, QObject *parent = nullptr);
     ~DAdapterInterface() override = default;
 
-    Q_PROPERTY(QString address READ address);
-    Q_PROPERTY(QString addressType READ addressType);
-    Q_PROPERTY(QString name READ name);
+    Q_PROPERTY(QString address READ address CONSTANT);
+    Q_PROPERTY(QString addressType READ addressType NOTIFY addressTypeChanged);
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged);
     Q_PROPERTY(QString alias READ alias WRITE setAlias NOTIFY aliasChanged);
     Q_PROPERTY(bool powered READ powered WRITE setPowered NOTIFY poweredChanged);
     Q_PROPERTY(bool discoverable READ discoverable WRITE setDiscoverable NOTIFY discoverableChanged);
@@ -50,11 +50,13 @@ public:
 
 public Q_SLOTS:
     QDBusPendingReply<ObjectMap> devices() const;
-    QDBusPendingReply<void> removeDevice(const QDBusObjectPath &device);
-    QDBusPendingReply<void> startDiscovery();
-    QDBusPendingReply<void> stopDiscovery();
+    QDBusPendingReply<void> removeDevice(const QDBusObjectPath &device) const;
+    QDBusPendingReply<void> startDiscovery() const;
+    QDBusPendingReply<void> stopDiscovery() const;
 
 Q_SIGNALS:
+    void addressTypeChanged(const QString &type);
+    void nameChanged(const QString &name);
     void aliasChanged(const QString &alias);
     void poweredChanged(const bool &powered);
     void discoverableChanged(const bool &discoverable);
@@ -62,6 +64,8 @@ Q_SIGNALS:
     void discoveringChanged(const bool discovering);
 
     void removed();
+    void deviceAdded(const QString &device);
+    void deviceRemoved(const QString &device);
 
 private:
     DDBusInterface *m_inter{nullptr};

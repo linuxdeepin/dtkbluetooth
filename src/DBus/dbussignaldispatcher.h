@@ -27,7 +27,7 @@ public:
 
 public Q_SLOTS:
 
-    virtual void dispatchAdded(const QDBusObjectPath &path, const Interfaces &interfaces) = 0;
+    virtual void dispatchAdded(const QDBusObjectPath &path, const MapVariantMap &interfaces) = 0;
     virtual void dispatchRemoved(const QDBusObjectPath &path, const QStringList &args) = 0;
 
     QDBusPendingReply<ObjectMap> getManagedObjects() const;

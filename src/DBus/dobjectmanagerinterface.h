@@ -26,11 +26,11 @@ public Q_SLOTS:
     QDBusPendingReply<ObjectMap> getManagedObjects();
 
 Q_SIGNALS:
-    void InterfacesAdded(const QDBusObjectPath &path, const Interfaces &interfaces);
+    void InterfacesAdded(const QDBusObjectPath &path, const MapVariantMap &interfaces);
     void InterfacesRemoved(const QDBusObjectPath &path, const QStringList &args);
 
 private Q_SLOTS:
-    void InterfacesAdd(const QDBusObjectPath &path, const Interfaces &interfaces);
+    void InterfacesAdd(const QDBusObjectPath &path, const MapVariantMap &interfaces);
     void InterfacesRemove(const QDBusObjectPath &path, const QStringList &args);
 
 private:

@@ -23,15 +23,15 @@ class DAdapterPrivate;
 class DAdapter : public QObject, public DObject
 {
     Q_OBJECT
-    explicit DAdapter(const quint64 adapter, QObject *parent = nullptr);
+    explicit DAdapter(quint64 adapter, QObject *parent = nullptr);
     friend class DManager;
 
 public:
     ~DAdapter() override;
 
-    Q_PROPERTY(QString address READ address);
-    Q_PROPERTY(DDevice::AddressType addressType READ addressType);
-    Q_PROPERTY(QString name READ name);
+    Q_PROPERTY(QString address READ address CONSTANT);
+    Q_PROPERTY(DDevice::AddressType addressType READ addressType NOTIFY addressTypeChanged);
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged);
     Q_PROPERTY(QString alias READ alias WRITE setAlias NOTIFY aliasChanged);
     Q_PROPERTY(bool powered READ powered WRITE setPowered NOTIFY poweredChanged);
     Q_PROPERTY(bool discoverable READ discoverable WRITE setDiscoverable NOTIFY discoverableChanged);
@@ -45,28 +45,32 @@ public:
     QString alias() const;
     void setAlias(const QString &alias);
     bool powered() const;
-    void setPowered(const bool powered);
+    void setPowered(bool powered);
     bool discoverable() const;
-    void setDiscoverable(const bool discoverable);
+    void setDiscoverable(bool discoverable);
     quint32 discoverableTimeout() const;
-    void setDiscoverableTimeout(const quint32 discoverableTimeout);
-    bool discovering();
-    DDevice specificDevice(QString deviceAddress);
+    void setDiscoverableTimeout(quint32 discoverableTimeout);
+    bool discovering() const;
+    QSharedPointer<DDevice> deviceFromAddress(const QString &deviceAddress) const;
 
 public Q_SLOTS:
-    DExpected<void> removeDevice(const QString &device);
-    DExpected<void> startDiscovery();
-    DExpected<void> stopDiscovery();
+    DExpected<void> removeDevice(const QString &device) const;
+    DExpected<void> startDiscovery() const;
+    DExpected<void> stopDiscovery() const;
     DExpected<QStringList> devices() const;
 
 Q_SIGNALS:
+    void addressTypeChanged(DDevice::AddressType type);
+    void nameChanged(const QString &name);
     void aliasChanged(const QString &alias);
-    void poweredChanged(const bool &powered);
-    void discoverableChanged(const bool &discoverable);
-    void discoverableTimeoutChanged(const quint32 discoverableTimeout);
-    void discoveringChanged(const bool discovering);
+    void poweredChanged(bool powered);
+    void discoverableChanged(bool discoverable);
+    void discoverableTimeoutChanged(quint32 discoverableTimeout);
+    void discoveringChanged(bool discovering);
 
     void removed();
+    void deviceAdded(const QString &deviceAddress);
+    void deviceRemoved(const QString &deviceAddress);
 
 private:
     D_DECLARE_PRIVATE(DAdapter);

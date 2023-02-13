@@ -5,7 +5,6 @@
 #ifndef DBLUETOOTHMANAGER_H
 #define DBLUETOOTHMANAGER_H
 
-#include "dbluetoothtypes.h"
 #include <QScopedPointer>
 #include <DExpected>
 #include <DObject>
@@ -24,24 +23,19 @@ class DManager : public QObject, public DObject
 {
     Q_OBJECT
 public:
-
-
     explicit DManager(QObject *parent = nullptr);
     ~DManager() override = default;
 
-    Q_PROPERTY(bool available READ available NOTIFY availableChanged);
+    Q_PROPERTY(bool available READ available CONSTANT);
 
-    DExpected<QStringList> adapters() const;
+    DExpected<QList<quint64>> adapters() const;
     bool available() const;
 
 public Q_SLOTS:
-    DExpected<QSharedPointer<DAdapter>> getAdapterObject(const QString& adapterId);
+    QSharedPointer<DAdapter> adapterFromId(quint64 adapterId);
     DExpected<void> registerAgent(const QSharedPointer<DAgent> &agent);
     DExpected<void> unregisterAgent(const QSharedPointer<DAgent> &agent);
     DExpected<void> requestDefaultAgent(const QSharedPointer<DAgent> &agent);
-
-Q_SIGNALS:
-    void availableChanged(const bool &available);
 
 private:
     D_DECLARE_PRIVATE(DManager)

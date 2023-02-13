@@ -22,14 +22,14 @@ public:
     BluetoothDispatcher(BluetoothDispatcher &&) = delete;
 
 public Q_SLOTS:
-    void dispatchAdded(const QDBusObjectPath &path, const Interfaces &interfaces) override;
+    void dispatchAdded(const QDBusObjectPath &path, const MapVariantMap &interfaces) override;
     void dispatchRemoved(const QDBusObjectPath &path, const QStringList &args) override;
 
 Q_SIGNALS:
-    void adapterAdded(const QDBusObjectPath adapter);
-    void adapterRemoved(const QDBusObjectPath adapter);
-    void deviceAdded(const QDBusObjectPath devices);
-    void deviceRemoved(const QDBusObjectPath devices);
+    void adapterAdded(const QDBusObjectPath &adapter);
+    void adapterRemoved(const QDBusObjectPath &adapter);
+    void deviceAdded(const QDBusObjectPath &devices);
+    void deviceRemoved(const QDBusObjectPath &devices);
 };
 
 DBLUETOOTH_END_NAMESPACE

@@ -6,20 +6,20 @@
 #define DBLUETOOTHDEVICE_P_H
 
 #include "ddeviceinterface.h"
-#include <DObjectPrivate>
-#include <dobject.h>
-#include <dobject_p.h>
-#include <qdbusextratypes.h>
 #include "dbluetoothdevice.h"
+#include <DObjectPrivate>
+#include <DObject>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
 using DTK_CORE_NAMESPACE::DObjectPrivate;
 
-class DDevicePrivate : public DObjectPrivate{
+class DDevicePrivate : public DObjectPrivate
+{
 public:
-    explicit DDevicePrivate(QDBusObjectPath path, DDevice *parent = nullptr);
+    explicit DDevicePrivate(const QString &path, DDevice *parent = nullptr);
     ~DDevicePrivate() override;
+    bool isValid() const;
 
     DDeviceInterface *m_device{nullptr};
     D_DECLARE_PUBLIC(DDevice);

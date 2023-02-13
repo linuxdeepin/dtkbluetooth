@@ -16,7 +16,7 @@ using DTK_CORE_NAMESPACE::DObjectPrivate;
 class DAdapterPrivate : public DObjectPrivate
 {
 public:
-    explicit DAdapterPrivate(const quint64 adapter, DAdapter *parent = nullptr);
+    explicit DAdapterPrivate(quint64 adapter, DAdapter *parent = nullptr);
     ~DAdapterPrivate() override;
 
     DAdapterInterface *m_adapter{nullptr};

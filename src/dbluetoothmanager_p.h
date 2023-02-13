@@ -19,8 +19,8 @@ public:
     explicit DManagerPrivate(DManager *parent = nullptr);
     ~DManagerPrivate() override;
 
-    DAgentManagerInterface *m_manager{nullptr};
-    
+    DAgentManagerInterface *m_agentManager{nullptr};
+
     D_DECLARE_PUBLIC(DManager)
 };
 

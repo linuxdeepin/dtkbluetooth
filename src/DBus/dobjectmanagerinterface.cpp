@@ -13,8 +13,8 @@ DObjectManagerInterface::DObjectManagerInterface(const QString &service, QObject
 {
     qDBusRegisterMetaType<ObjectMap>();
     qRegisterMetaType<ObjectMap>("ObjectMap");
-    qDBusRegisterMetaType<Interfaces>();
-    qRegisterMetaType<Interfaces>("Interfaces");
+    qDBusRegisterMetaType<MapVariantMap>();
+    qRegisterMetaType<MapVariantMap>("MapVariantMap");
 
 #ifndef USE_FAKE_INTERFACE
     auto Connection = QDBusConnection::systemBus();
@@ -35,11 +35,11 @@ DObjectManagerInterface::DObjectManagerInterface(const QString &service, QObject
 }
 
 QDBusPendingReply<ObjectMap> DObjectManagerInterface::getManagedObjects()
-{   
+{
     return m_inter->asyncCall("GetManagedObjects");
 }
 
-void DObjectManagerInterface::InterfacesAdd(const QDBusObjectPath &path, const Interfaces &interfaces)
+void DObjectManagerInterface::InterfacesAdd(const QDBusObjectPath &path, const MapVariantMap &interfaces)
 {
     Q_EMIT InterfacesAdded(path, interfaces);
 }

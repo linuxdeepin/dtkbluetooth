@@ -5,15 +5,9 @@
 #ifndef DBLUETOOTHDEVICE_H
 #define DBLUETOOTHDEVICE_H
 
-#include "dbluetoothtypes.h"
-#include <QScopedPointer>
+#include "dbluetoothdeviceinfo.h"
 #include <DExpected>
 #include <DObject>
-#include <qglobal.h>
-#include <qobjectdefs.h>
-#include <QBluetoothUuid>
-#include <QBluetoothDeviceInfo>
-
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -22,11 +16,12 @@ using DTK_CORE_NAMESPACE::DObject;
 
 class DDevicePrivate;
 
-class DDevice : public QObject, public DObject{
-
+class DDevice : public QObject, public DObject
+{
     Q_OBJECT
-    explicit DDevice(QString adapterPath, QString deviceAddress, QObject *parent=nullptr);
+    explicit DDevice(const QString &adapterPath, const QString &deviceAddress, QObject *parent = nullptr);
     friend class DAdapter;
+    friend class DAgentAdaptor;
 
 public:
     ~DDevice() override;
@@ -35,61 +30,55 @@ public:
 
     Q_PROPERTY(bool blocked READ blocked WRITE setBlocked NOTIFY blockedChanged);
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged);
-    Q_PROPERTY(bool legacyPairing READ legacyPairing NOTIFY legacyPairingChanged);
+    Q_PROPERTY(bool legacyPairing READ legacyPairing CONSTANT);
     Q_PROPERTY(bool paired READ paired NOTIFY pairedChanged);
     Q_PROPERTY(bool servicesResolved READ servicesResolved NOTIFY servicesResolvedChanged);
     Q_PROPERTY(bool trusted READ trusted WRITE setTrusted NOTIFY trustedChanged);
-    Q_PROPERTY(QString adapter READ adapter NOTIFY adapterChanged);
-    Q_PROPERTY(QString address READ address NOTIFY addressChanged);
+    Q_PROPERTY(qint64 adapter READ adapter CONSTANT);
+    Q_PROPERTY(QString address READ address CONSTANT);
+    Q_PROPERTY(DDevice::AddressType addressType READ addressType NOTIFY addressTypeChanged)
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged);
-    Q_PROPERTY(QBluetoothDeviceInfo deviceInfo READ deviceInfo NOTIFY deviceInfoChanged);
-    Q_PROPERTY(QList<QBluetoothUuid> UUIDs READ UUIDs NOTIFY UUIDsChanged);
-    Q_PROPERTY(QString icon READ icon NOTIFY iconChanged);
-    Q_PROPERTY(QString name READ name NOTIFY nameChanged);
+    Q_PROPERTY(qint16 RSSI READ RSSI NOTIFY RSSIChanged);
+    Q_PROPERTY(DBluetoothDeviceInfo deviceInfo READ deviceInfo CONSTANT);
+    Q_PROPERTY(QString icon READ icon CONSTANT);
 
     bool blocked() const;
-    void setBlocked(const bool &blocked);
+    void setBlocked(bool blocked);
     bool connected() const;
     bool legacyPairing() const;
     bool paired() const;
     bool servicesResolved() const;
     bool trusted() const;
-    void setTrusted(const bool trusted);
-    QString adapter() const;
+    void setTrusted(bool trusted);
+    qint64 adapter() const;
     QString address() const;
+    AddressType addressType() const;
     QString alias() const;
-    QBluetoothDeviceInfo deviceInfo() const;
-    QList<QBluetoothUuid> UUIDs() const;
+    DBluetoothDeviceInfo deviceInfo() const;
     QString icon() const;
-    QString name() const;
+    qint16 RSSI() const;
+    bool isValid() const;
 
 public Q_SLOTS:
-    DExpected<void> disconnectDevice();
-    DExpected<void> cancelPairing();
-    DExpected<void> connectDevice();
-    DExpected<void> pair();
-    DExpected<QList<qint16>> RSSI();
+    DExpected<void> disconnectDevice() const;
+    DExpected<void> cancelPairing() const;
+    DExpected<void> connectDevice() const;
+    DExpected<void> pair() const;
 
 Q_SIGNALS:
-    void blockedChanged(const bool blocked);
-    void connectedChanged(const bool connected);
-    void legacyPairingChanged(const bool paired);
-    void pairedChanged(const bool servicesResolved);
-    void servicesResolvedChanged(const bool servicesResolved);
-    void trustedChanged(const bool trusted);
-    void adapterChanged(const QString adapter);
-    void addressChanged(const QString address);
-    void aliasChanged(const QString alias);
-    void deviceInfoChanged(const QBluetoothDeviceInfo deviceInfo); //TODO: DBluetoothDeviceInfo
-    void UUIDsChanged(const QList<QBluetoothUuid> UUIDs);
-    void iconChanged(const QString icon);
-    void nameChanged(const QString name);
+    void blockedChanged(bool blocked);
+    void connectedChanged(bool connected);
+    void pairedChanged(bool servicesResolved);
+    void servicesResolvedChanged(bool servicesResolved);
+    void trustedChanged(bool trusted);
+    void addressTypeChanged(AddressType type);
+    void aliasChanged(const QString &alias);
+    void RSSIChanged(qint16 rssi);
 
     void removed();
 
 private:
     D_DECLARE_PRIVATE(DDevice);
-
 };
 
 DBLUETOOTH_END_NAMESPACE

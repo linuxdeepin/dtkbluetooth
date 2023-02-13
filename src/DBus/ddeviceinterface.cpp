@@ -5,20 +5,10 @@
 #include "ddeviceinterface.h"
 #include "btdispatcher.h"
 #include "dbluetoothutils.h"
-#include <qbluetoothdeviceinfo.h>
-#include <qbluetoothuuid.h>
-#include <qdbusabstractinterface.h>
-#include <qdbusargument.h>
-#include <QDBusMetaType>
-#include <QMetaType>
-#include <qdbusextratypes.h>
-#include <qdbusmetatype.h>
-#include <qlist.h>
-#include <qobject.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
-DDeviceInterface::DDeviceInterface(QDBusObjectPath path, QObject *parent)
+DDeviceInterface::DDeviceInterface(const QString &path, QObject *parent)
     : QObject(parent)
 {
 #ifndef USE_FAKE_INTERFACE
@@ -29,97 +19,130 @@ DDeviceInterface::DDeviceInterface(QDBusObjectPath path, QObject *parent)
     auto Connection = QDBusConnection::sessionBus();
 #endif
     const auto &Interface = QLatin1String(BlueZDeviceInterface);
-    m_inter = new DDBusInterface(Service, path.path(), Interface, Connection, this);
+    m_inter = new DDBusInterface(Service, path, Interface, Connection, this);
 #ifndef USE_FAKE_INTERFACE
     m_inter->connect(
-        &BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceRemoved, this, [this](const QDBusObjectPath device) {
-            if(device.path() == this->m_inter->path())
+        &BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceRemoved, this, [this](const QDBusObjectPath &device) {
+            if (device.path() == this->m_inter->path())
                 Q_EMIT removed();
         });
 #endif
 }
 
-bool DDeviceInterface::blocked() const{
+bool DDeviceInterface::blocked() const
+{
     return qdbus_cast<bool>(m_inter->property("Blocked"));
 }
 
-void DDeviceInterface::setBlocked(const bool &blocked){
+void DDeviceInterface::setBlocked(bool blocked)
+{
     m_inter->setProperty("Blocked", blocked);
 }
 
-bool DDeviceInterface::connected() const{
+bool DDeviceInterface::connected() const
+{
     return qdbus_cast<bool>(m_inter->property("Connected"));
 }
 
-bool DDeviceInterface::legacyPairing() const{
+bool DDeviceInterface::legacyPairing() const
+{
     return qdbus_cast<bool>(m_inter->property("LegacyPairing"));
 }
 
-bool DDeviceInterface::paired() const{
+bool DDeviceInterface::paired() const
+{
     return qdbus_cast<bool>(m_inter->property("Paired"));
 }
 
-bool DDeviceInterface::servicesResolved() const{
+bool DDeviceInterface::servicesResolved() const
+{
     return qdbus_cast<bool>(m_inter->property("ServicesResolved"));
 }
 
-bool DDeviceInterface::trusted() const{
+bool DDeviceInterface::trusted() const
+{
     return qdbus_cast<bool>(m_inter->property("Trusted"));
 }
 
-void DDeviceInterface::setTrusted(const bool trusted){
+void DDeviceInterface::setTrusted(bool trusted)
+{
     m_inter->setProperty("Trusted", trusted);
 }
 
-QString DDeviceInterface::adapter() const{
+QString DDeviceInterface::adapter() const
+{
     return qdbus_cast<QString>(m_inter->property("Adapter"));
 }
 
-QString DDeviceInterface::address() const{
+QString DDeviceInterface::address() const
+{
     return qdbus_cast<QString>(m_inter->property("Address"));
 }
 
-QString DDeviceInterface::alias() const{
+QString DDeviceInterface::alias() const
+{
     return qdbus_cast<QString>(m_inter->property("Alias"));
 }
 
-QBluetoothDeviceInfo DDeviceInterface::deviceInfo() const{
-    // TODO DBluetoothDeviceInfo
-    //return qdbus_cast<DBluetoothDeviceInfo>(m_inter->property("DeviceInfo"));
-}
-
-QStringList DDeviceInterface::UUIDs() const{
+QStringList DDeviceInterface::UUIDs() const
+{
     return qdbus_cast<QStringList>(m_inter->property("UUIDs"));
 }
 
-QString DDeviceInterface::name() const{
+QString DDeviceInterface::name() const
+{
     return qdbus_cast<QString>(m_inter->property("Name"));
 }
 
-QString DDeviceInterface::icon() const{
+QString DDeviceInterface::icon() const
+{
     return qdbus_cast<QString>(m_inter->property("Icon"));
 }
 
-//Methods
-QDBusPendingReply<void> DDeviceInterface::disconnect(){
+QString DDeviceInterface::addressType() const
+{
+    return qdbus_cast<QString>(m_inter->property("AddressType"));
+}
+
+quint32 DDeviceInterface::Class() const
+{
+    return qdbus_cast<quint32>(m_inter->property("Class"));
+}
+
+quint16 DDeviceInterface::appearance() const
+{
+    return qdbus_cast<quint16>(m_inter->property("Appearance"));
+}
+
+qint16 DDeviceInterface::RSSI() const
+{
+    return qdbus_cast<qint16>(m_inter->property("RSSI"));
+}
+
+bool DDeviceInterface::isValid() const
+{
+    return m_inter->isValid();
+}
+
+// Methods
+QDBusPendingReply<void> DDeviceInterface::disconnect()
+{
     return m_inter->asyncCall("Disconnect");
 }
 
-QDBusPendingReply<void> DDeviceInterface::cancelPairing(){
+QDBusPendingReply<void> DDeviceInterface::cancelPairing()
+{
     return m_inter->asyncCall("CancelPairing");
 }
 
-QDBusPendingReply<void> DDeviceInterface::connect(){
+QDBusPendingReply<void> DDeviceInterface::connect()
+{
     return m_inter->asyncCall("Connect");
 }
 
-QDBusPendingReply<void> DDeviceInterface::pair(){
+QDBusPendingReply<void> DDeviceInterface::pair()
+{
     return m_inter->asyncCall("Pair");
 }
-
-QDBusPendingReply<QList<qint16>> DDeviceInterface::RSSI(){
-    return m_inter->asyncCall("RSSI");
-}
-
 
 DBLUETOOTH_END_NAMESPACE

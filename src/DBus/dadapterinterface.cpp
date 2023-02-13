@@ -13,18 +13,27 @@ DAdapterInterface::DAdapterInterface(const QString &path, QObject *parent)
 {
 #ifndef USE_FAKE_INTERFACE
     const auto &Service = QLatin1String(BlueZService);
-    auto Connection = QDBusConnection::systemBus();
+    const auto &Connection = QDBusConnection::systemBus();
 #else
     const auto &Service = QLatin1String(FakeBlueZService);
-    auto Connection = QDBusConnection::sessionBus();
+    const auto &Connection = QDBusConnection::sessionBus();
 #endif
-    const auto &Interface = QLatin1String(BlueZAdapterInterface);
-    m_inter = new DDBusInterface(Service, path, Interface, Connection, this);
+    m_inter = new DDBusInterface(Service, path, QLatin1String(BlueZAdapterInterface), Connection, this);
 #ifndef USE_FAKE_INTERFACE
     m_inter->connect(
-        &BluetoothDispatcher::instance(), &BluetoothDispatcher::adapterAdded, this, [this](const QDBusObjectPath &adapter) {
+        &BluetoothDispatcher::instance(), &BluetoothDispatcher::adapterRemoved, this, [this](const QDBusObjectPath &adapter) {
             if (m_inter->path() == adapter.path())
                 Q_EMIT removed();
+        });
+    m_inter->connect(
+        &BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceAdded, this, [this](const QDBusObjectPath &devices) {
+            if (devices.path().contains(adapterPath()))
+                Q_EMIT deviceAdded(DBusPathToDeviceAddr(devices));
+        });
+    m_inter->connect(
+        &BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceRemoved, this, [this](const QDBusObjectPath &devices) {
+            if (devices.path().contains(adapterPath()))
+                Q_EMIT deviceRemoved(DBusPathToDeviceAddr(devices));
         });
 #endif
 }
@@ -95,22 +104,23 @@ QDBusPendingReply<ObjectMap> DAdapterInterface::devices() const
     return dispatcher.getManagedObjects();
 }
 
-QDBusPendingReply<void> DAdapterInterface::removeDevice(const QDBusObjectPath &device)
+QDBusPendingReply<void> DAdapterInterface::removeDevice(const QDBusObjectPath &device) const
 {
     return m_inter->asyncCallWithArgumentList("RemoveDevice", {QVariant::fromValue(device)});
 }
 
-QDBusPendingReply<void> DAdapterInterface::startDiscovery()
+QDBusPendingReply<void> DAdapterInterface::startDiscovery() const
 {
     return m_inter->asyncCall("StartDiscovery");
 }
 
-QDBusPendingReply<void> DAdapterInterface::stopDiscovery()
+QDBusPendingReply<void> DAdapterInterface::stopDiscovery() const
 {
     return m_inter->asyncCall("StopDiscovery");
 }
 
-QString DAdapterInterface::adapterPath() const{
+QString DAdapterInterface::adapterPath() const
+{
     return m_inter->path();
 }
 

@@ -14,7 +14,7 @@ BluetoothObexDispatcher::BluetoothObexDispatcher(const QString &Service, QObject
     connect(this->source, &DObjectManagerInterface::InterfacesRemoved, this, &BluetoothObexDispatcher::dispatchRemoved);
 }
 
-void BluetoothObexDispatcher::dispatchAdded(const QDBusObjectPath &path, const Interfaces &interfaces)
+void BluetoothObexDispatcher::dispatchAdded(const QDBusObjectPath &path, const MapVariantMap &interfaces)
 {
     if (interfaces.find(QString(BlueZObexSessionInterface)) != interfaces.cend())
         Q_EMIT sessionAdded(path);
