@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DDEVICE_H
-#define DDEVICE_H
+#ifndef DBLUETOOTHDEVICE_H
+#define DBLUETOOTHDEVICE_H
 
-#include "dtkbluetoothtypes.h"
+#include "dbluetoothtypes.h"
 #include <QScopedPointer>
 #include <DExpected>
 #include <DObject>
@@ -30,6 +30,8 @@ class DDevice : public QObject, public DObject{
 
 public:
     ~DDevice() override;
+
+    enum class AddressType : quint8 { Public, Random, Unknown };
 
     Q_PROPERTY(bool blocked READ blocked WRITE setBlocked NOTIFY blockedChanged);
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged);

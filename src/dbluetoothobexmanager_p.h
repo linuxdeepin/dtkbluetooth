@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DOBEXMANAGER_P_H
-#define DOBEXMANAGER_P_H
+#ifndef DBLUETOOTHOBEXMANAGER_P_H
+#define DBLUETOOTHOBEXMANAGER_P_H
 
 #include "dobexagentmanagerinterface.h"
 #include <DObjectPrivate>
-#include "dobexmanager.h"
+#include "dbluetoothobexmanager.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

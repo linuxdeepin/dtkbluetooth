@@ -6,7 +6,6 @@
 #define BTOBEXDISPATCHER_H
 
 #include "dbussignaldispatcher.h"
-#include <QEnableSharedFromThis>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

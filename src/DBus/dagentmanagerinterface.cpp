@@ -4,7 +4,6 @@
 
 #include "dagentmanagerinterface.h"
 #include "btdispatcher.h"
-#include "dtkbluetoothutils.h"
 #include <dobject.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE

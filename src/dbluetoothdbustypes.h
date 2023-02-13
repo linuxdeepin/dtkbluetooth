@@ -2,21 +2,21 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DTKBLUETOTHTYPES_H
-#define DTKBLUETOTHTYPES_H
+#ifndef DBLUETOOTHDBUSTYPES_H
+#define DBLUETOOTHDBUSTYPES_H
 
 #include "dtkbluetooth_global.h"
-#include <QObject>
 #include <QMap>
-#include <QVariant>
 #include <QDBusObjectPath>
+#include <QPair>
+#include <qdbusextratypes.h>
 #include <qpair.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
-enum class AddressType : quint8 { Public, Random, Unknown };
-
-using fileInfo = QPair<int,QVariantMap>;
+using ObjectMap = QMap<QDBusObjectPath, QMap<QString, QVariantMap>>;
+using Interfaces = QMap<QString, QVariantMap>;
+using fileInfo_p = QPair<QDBusObjectPath, QVariantMap>;
 
 DBLUETOOTH_END_NAMESPACE
 

@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#include "ddevice_p.h"
+#include "dbluetoothdevice_p.h"
 #include "ddeviceinterface.h"
-#include "dtkbluetoothutils.h"
+#include "dbluetoothutils.h"
 #include <dexpected.h>
 #include <dobject.h>
 #include <dobject_p.h>

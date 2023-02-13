@@ -3,9 +3,8 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "dobextransferinterface.h"
-#include "btdispatcher.h"
 #include "btobexdispatcher.h"
-#include "dtkbluetoothutils.h"
+#include "dbluetoothutils.h"
 #include <qdbusargument.h>
 #include <qdbusextratypes.h>
 

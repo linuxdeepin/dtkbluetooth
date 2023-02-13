@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DADAPTER_P_H
-#define DADAPTER_P_H
+#ifndef DBLUETOOTHADAPTER_P_H
+#define DBLUETOOTHADAPTER_P_H
 
 #include "dadapterinterface.h"
 #include <DObjectPrivate>
-#include "dadapter.h"
+#include "dbluetoothadapter.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

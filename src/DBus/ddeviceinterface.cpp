@@ -4,8 +4,7 @@
 
 #include "ddeviceinterface.h"
 #include "btdispatcher.h"
-#include "dadapter.h"
-#include "dtkbluetoothutils.h"
+#include "dbluetoothutils.h"
 #include <qbluetoothdeviceinfo.h>
 #include <qbluetoothuuid.h>
 #include <qdbusabstractinterface.h>

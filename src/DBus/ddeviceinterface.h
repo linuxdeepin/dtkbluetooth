@@ -6,7 +6,7 @@
 #define DDEVICEINTERFACE_H
 
 #include "dtkbluetooth_global.h"
-#include "dtkbluetoothdbustypes.h"
+#include "dbluetoothdbustypes.h"
 #include <QObject>
 #include <DObject>
 #include <QDBusObjectPath>

@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DMANAGER_H
-#define DMANAGER_H
+#ifndef DBLUETOOTHMANAGER_H
+#define DBLUETOOTHMANAGER_H
 
-#include "dtkbluetoothtypes.h"
+#include "dbluetoothtypes.h"
 #include <QScopedPointer>
 #include <DExpected>
 #include <DObject>
 #include <dexpected.h>
-#include "dadapter.h"
+#include "dbluetoothadapter.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

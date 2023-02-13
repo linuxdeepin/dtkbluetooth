@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DMANAGER_P_H
-#define DMANAGER_P_H
+#ifndef DBLUETOOTHMANAGER_P_H
+#define DBLUETOOTHMANAGER_P_H
 
 #include "dagentmanagerinterface.h"
 #include <DObjectPrivate>
-#include "dmanager.h"
+#include "dbluetoothmanager.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

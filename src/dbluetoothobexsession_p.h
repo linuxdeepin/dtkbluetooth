@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DOBEXSESSION_P_H
-#define DOBEXSESSION_P_H
+#ifndef DBLUETOOTHOBEXSESSION_P_H
+#define DBLUETOOTHOBEXSESSION_P_H
 
 #include "dobexsessioninterface.h"
 #include <DObjectPrivate>
-#include "dobexsession.h"
+#include "dbluetoothobexsession.h"
 #include "dobexobjectpushinterface.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 #include "btobexdispatcher.h"
-#include "dtkbluetoothutils.h"
+#include "dbluetoothutils.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

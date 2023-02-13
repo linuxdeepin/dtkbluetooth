@@ -6,11 +6,11 @@
 #define DTKBLUETOOTHUTILS_H
 
 #include "dtkbluetooth_global.h"
-#include "dtkbluetoothdbustypes.h"
+#include "dbluetoothdbustypes.h"
 #include <QDBusObjectPath>
 #include <QBluetoothUuid>
 #include <QDBusArgument>
-#include <dobextransfer.h>
+#include "dbluetoothobextransfer.h"
 #include <qglobal.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE

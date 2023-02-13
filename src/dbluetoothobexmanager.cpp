@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#include "dobexmanager_p.h"
+#include "dbluetoothobexmanager_p.h"
 #include "dobexagentmanagerinterface.h"
-#include "dtkbluetoothutils.h"
-#include "QFileInfo"
+#include "dbluetoothutils.h"
+#include <QFileInfo>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

@@ -2,10 +2,10 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DOBEXMANAGER_H
-#define DOBEXMANAGER_H
+#ifndef DBLUETOOTHOBEXMANAGER_H
+#define DBLUETOOTHOBEXMANAGER_H
 
-#include "dtkbluetoothtypes.h"
+#include "dbluetoothtypes.h"
 #include <QScopedPointer>
 #include <DExpected>
 #include <DObject>

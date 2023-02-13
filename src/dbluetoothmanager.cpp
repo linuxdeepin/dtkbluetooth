@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#include "dmanager_p.h"
+#include "dbluetoothmanager_p.h"
 #include "dagentmanagerinterface.h"
-#include "dtkbluetoothutils.h"
+#include "dbluetoothutils.h"
 #include <dobject.h>
 #include <qfileinfo.h>
 

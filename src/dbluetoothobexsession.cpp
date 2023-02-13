@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#include "dobexsession_p.h"
-#include "dtkbluetoothutils.h"
+#include "dbluetoothobexsession_p.h"
+#include "dbluetoothutils.h"
 #include <dobject.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE

@@ -4,7 +4,7 @@
 
 #include "dtkbluetooth_global.h"
 #include "dobjectmanagerinterface.h"
-#include "dtkbluetoothdbustypes.h"
+#include "dbluetoothdbustypes.h"
 #include <QObject>
 #include <QDBusMetaType>
 #include <QMetaType>

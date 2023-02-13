@@ -2,11 +2,11 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DADAPTER_H
-#define DADAPTER_H
+#ifndef DBLUETOOTHADAPTER_H
+#define DBLUETOOTHADAPTER_H
 
-#include "ddevice.h"
-#include "dtkbluetoothtypes.h"
+#include "dbluetoothdevice.h"
+#include "dbluetoothtypes.h"
 #include <QScopedPointer>
 #include <DExpected>
 #include <DObject>
@@ -30,7 +30,7 @@ public:
     ~DAdapter() override;
 
     Q_PROPERTY(QString address READ address);
-    Q_PROPERTY(AddressType addressType READ addressType);
+    Q_PROPERTY(DDevice::AddressType addressType READ addressType);
     Q_PROPERTY(QString name READ name);
     Q_PROPERTY(QString alias READ alias WRITE setAlias NOTIFY aliasChanged);
     Q_PROPERTY(bool powered READ powered WRITE setPowered NOTIFY poweredChanged);
@@ -40,7 +40,7 @@ public:
     Q_PROPERTY(bool discovering READ discovering NOTIFY discoveringChanged);
 
     QString address() const;
-    AddressType addressType() const;
+    DDevice::AddressType addressType() const;
     QString name() const;
     QString alias() const;
     void setAlias(const QString &alias);

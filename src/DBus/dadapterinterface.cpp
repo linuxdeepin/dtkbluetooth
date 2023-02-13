@@ -4,7 +4,7 @@
 
 #include "dadapterinterface.h"
 #include "btdispatcher.h"
-#include "dtkbluetoothutils.h"
+#include "dbluetoothutils.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#include "dadapter_p.h"
-#include "ddevice.h"
-#include "dtkbluetoothutils.h"
+#include "dbluetoothadapter_p.h"
+#include "dbluetoothdevice.h"
+#include "dbluetoothutils.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -47,15 +47,15 @@ QString DAdapter::address() const
     return d->m_adapter->address();
 }
 
-AddressType DAdapter::addressType() const
+DDevice::AddressType DAdapter::addressType() const
 {
     D_DC(DAdapter);
     const auto &type = d->m_adapter->addressType();
     if (type == "public")
-        return AddressType::Public;
+        return DDevice::AddressType::Public;
     else if (type == "random")
-        return AddressType::Random;
-    return AddressType::Unknown;
+        return DDevice::AddressType::Random;
+    return DDevice::AddressType::Unknown;
 }
 
 QString DAdapter::name() const

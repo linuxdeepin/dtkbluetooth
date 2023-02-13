@@ -2,12 +2,12 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DOBEXTRANSFER_P_H
-#define DOBEXTRANSFER_P_H
+#ifndef DBLUETOOTHOBEXTRANSFER_P_H
+#define DBLUETOOTHOBEXTRANSFER_P_H
 
 #include "dobextransferinterface.h"
 #include <DObjectPrivate>
-#include "dobextransfer.h"
+#include "dbluetoothobextransfer.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

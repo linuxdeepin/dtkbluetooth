@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#include "dobextransfer_p.h"
+#include "dbluetoothobextransfer_p.h"
 #include "dobextransferinterface.h"
-#include "dtkbluetoothutils.h"
+#include "dbluetoothutils.h"
 #include <qobjectdefs.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE

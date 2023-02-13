@@ -2,15 +2,15 @@
 //
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
-#ifndef DDEVICE_P_H
-#define DDEVICE_P_H
+#ifndef DBLUETOOTHDEVICE_P_H
+#define DBLUETOOTHDEVICE_P_H
 
 #include "ddeviceinterface.h"
 #include <DObjectPrivate>
 #include <dobject.h>
 #include <dobject_p.h>
 #include <qdbusextratypes.h>
-#include "ddevice.h"
+#include "dbluetoothdevice.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

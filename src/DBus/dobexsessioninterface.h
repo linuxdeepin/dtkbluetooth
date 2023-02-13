@@ -6,13 +6,11 @@
 #define DOBEXSESSIONINTERFACE_H
 
 #include "dtkbluetooth_global.h"
-#include "dtkbluetoothdbustypes.h"
 #include <QObject>
 #include <DObject>
 #include <QDBusObjectPath>
 #include <DDBusInterface>
 #include <QDBusPendingReply>
-#include <dobexsession.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
