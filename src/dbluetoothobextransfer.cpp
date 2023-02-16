@@ -5,17 +5,15 @@
 #include "dbluetoothobextransfer_p.h"
 #include "dobextransferinterface.h"
 #include "dbluetoothutils.h"
-#include <qobjectdefs.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
 using DCORE_NAMESPACE::DUnexpected;
 using DTK_CORE_NAMESPACE::emplace_tag;
 
-DObexTransferPrivate::DObexTransferPrivate(quint64 sessionId, quint64 transferId, DObexTransfer *parent)
+DObexTransferPrivate::DObexTransferPrivate(const ObexSessionInfo &info, quint64 transferId, DObexTransfer *parent)
     : DObjectPrivate(parent)
-    , m_obextransfer(new DObexTransferInterface("/org/bluez/obex/client/session" + QString::number(sessionId) + "/transfer" +
-                                                QString::number(transferId)))
+    , m_obextransfer(new DObexTransferInterface(TransferIdToDBusPath(sessionInfoToDBusPath(info), transferId)))
 {
 }
 
@@ -24,33 +22,30 @@ DObexTransferPrivate::~DObexTransferPrivate()
     delete m_obextransfer;
 }
 
-DObexTransfer::DObexTransfer(quint64 sessionId, quint64 transferId, QObject *parent)
+DObexTransfer::DObexTransfer(const ObexSessionInfo &info, quint64 transferId, QObject *parent)
     : QObject(parent)
-    , DObject(*new DObexTransferPrivate(sessionId, transferId, this))
+    , DObject(*new DObexTransferPrivate(info, transferId, this))
 {
     D_DC(DObexTransfer);
-    connect(d->m_obextransfer, &DObexTransferInterface::statusChanged, this, [this](const QString statusStr) {
+    connect(d->m_obextransfer, &DObexTransferInterface::statusChanged, this, [this](const QString &statusStr) {
         Q_EMIT this->statusChanged(stringToTransferstatus(statusStr));
     });
-    connect(d->m_obextransfer, &DObexTransferInterface::sessionChanged, this, &DObexTransfer::sessionChanged);
-    connect(d->m_obextransfer, &DObexTransferInterface::nameChanged, this, &DObexTransfer::nameChanged);
-    connect(d->m_obextransfer, &DObexTransferInterface::sizeChanged, this, &DObexTransfer::sizeChanged);
     connect(d->m_obextransfer, &DObexTransferInterface::transferredChanged, this, &DObexTransfer::transferredChanged);
-    connect(d->m_obextransfer, &DObexTransferInterface::filenameChanged, this, &DObexTransfer::filenameChanged);
+    connect(d->m_obextransfer, &DObexTransferInterface::removed, this, &DObexTransfer::removed);
 }
 
 DObexTransfer::~DObexTransfer() = default;
 
-transferStatus DObexTransfer::status() const
+DObexTransfer::TransferStatus DObexTransfer::status() const
 {
     D_DC(DObexTransfer);
     return stringToTransferstatus(d->m_obextransfer->status());
 }
 
-quint64 DObexTransfer::session() const
+ObexSessionInfo DObexTransfer::session() const
 {
     D_DC(DObexTransfer);
-    return d->m_obextransfer->session();
+    return DBusPathToSessionInfo(d->m_obextransfer->session());
 }
 
 QString DObexTransfer::name() const
@@ -71,13 +66,19 @@ quint64 DObexTransfer::transferred() const
     return d->m_obextransfer->transferred();
 }
 
-QString DObexTransfer::filename() const
+QFileInfo DObexTransfer::filename() const
 {
     D_DC(DObexTransfer);
     return d->m_obextransfer->filename();
 }
 
-DExpected<void> DObexTransfer::cancel()
+QString DObexTransfer::type() const
+{
+    D_DC(DObexTransfer);
+    return d->m_obextransfer->type();
+}
+
+DExpected<void> DObexTransfer::cancel() const
 {
     D_DC(DObexTransfer);
     auto reply = d->m_obextransfer->cancel();

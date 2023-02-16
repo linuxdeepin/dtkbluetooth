@@ -16,6 +16,7 @@ using DTK_CORE_NAMESPACE::emplace_tag;
 
 DManagerPrivate::DManagerPrivate(DManager *parent)
     : DObjectPrivate(parent)
+    , m_agentManager(new DAgentManagerInterface(parent))
 {
 }
 
@@ -28,6 +29,13 @@ DManager::DManager(QObject *parent)
     : QObject(parent)
     , DObject(*new DManagerPrivate(this))
 {
+    connect(&BluetoothDispatcher::instance(), &BluetoothDispatcher::adapterAdded, this, [this](const QDBusObjectPath &adapter) {
+        Q_EMIT this->adapterAdded(DBusPathToAdapterId(adapter));
+    });
+
+    connect(&BluetoothDispatcher::instance(), &BluetoothDispatcher::adapterRemoved, this, [this](const QDBusObjectPath &adapter) {
+        Q_EMIT this->adapterRemoved(DBusPathToAdapterId(adapter));
+    });
 }
 
 DExpected<QList<quint64>> DManager::adapters() const
@@ -37,9 +45,9 @@ DExpected<QList<quint64>> DManager::adapters() const
     if (!reply.isValid()) {
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
     }
-    auto AdapterList = getSpecificObject(reply.value(), {QString(BlueZAdapterInterface)});
+    const auto &adapterList = getSpecificObject(reply.value(), {QString(BlueZAdapterInterface)});
     QList<quint64> ret;
-    for (const auto &adapter : AdapterList)
+    for (const auto &adapter : adapterList)
         ret.append(DBusPathToAdapterId(adapter));
     return ret;
 };
@@ -53,13 +61,14 @@ bool DManager::available() const
         return false;
 };
 
-QSharedPointer<DAdapter> DManager::adapterFromId(quint64 adapterId)
+DExpected<QSharedPointer<DAdapter>> DManager::adapterFromId(quint64 adapterId) const
 {
-    const auto adapterList = adapters().value_or(QList<quint64>{});
-    if (adapterList.empty())
-        return nullptr;
+    const auto &reply = adapters();
+    if (!reply)
+        return DUnexpected{reply.error()};
+    const auto &adapterList = reply.value();
     if (!adapterList.contains(adapterId))
-        return nullptr;
+        return DUnexpected{emplace_tag::USE_EMPLACE, -1, "this adapter doesn't exists"};
     return QSharedPointer<DAdapter>(new DAdapter(adapterId));
 };
 

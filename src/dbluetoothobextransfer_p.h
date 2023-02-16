@@ -16,10 +16,11 @@ using DTK_CORE_NAMESPACE::DObjectPrivate;
 class DObexTransferPrivate : public DObjectPrivate
 {
 public:
-    explicit DObexTransferPrivate(quint64 sessionId, quint64 transferId, DObexTransfer *parent = nullptr);
+    explicit DObexTransferPrivate(const ObexSessionInfo &info, quint64 transferId, DObexTransfer *parent = nullptr);
     ~DObexTransferPrivate() override;
 
     DObexTransferInterface *m_obextransfer{nullptr};
+    QVariantMap properties;
     D_DECLARE_PUBLIC(DObexTransfer)
 };
 

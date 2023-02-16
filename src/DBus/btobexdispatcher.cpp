@@ -18,10 +18,8 @@ void BluetoothObexDispatcher::dispatchAdded(const QDBusObjectPath &path, const M
 {
     if (interfaces.find(QString(BlueZObexSessionInterface)) != interfaces.cend())
         Q_EMIT sessionAdded(path);
-    else if (interfaces.find(QString(BlueZObexTransferInterface)) != interfaces.cend())
+    if (interfaces.find(QString(BlueZObexTransferInterface)) != interfaces.cend())
         Q_EMIT transferAdded(path);
-    else if (interfaces.find(QString(BlueZObexObjectPushInterface)) != interfaces.cend())
-        Q_EMIT objectPushAdded(path);
     return;
 }
 
@@ -29,10 +27,8 @@ void BluetoothObexDispatcher::dispatchRemoved(const QDBusObjectPath &path, const
 {
     if (args.contains(QString(BlueZObexSessionInterface)))
         Q_EMIT sessionRemoved(path);
-    else if (args.contains(QString(BlueZObexTransferInterface)))
+    if (args.contains(QString(BlueZObexTransferInterface)))
         Q_EMIT transferRemoved(path);
-    else if (args.contains(QString(BlueZObexObjectPushInterface)))
-        Q_EMIT objectPushRemoved(path);
     return;
 }
 

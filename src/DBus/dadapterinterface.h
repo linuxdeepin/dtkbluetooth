@@ -8,7 +8,6 @@
 #include "dtkbluetooth_global.h"
 #include "dbluetoothdbustypes.h"
 #include <QObject>
-#include <DObject>
 #include <QDBusObjectPath>
 #include <DDBusInterface>
 #include <QDBusPendingReply>

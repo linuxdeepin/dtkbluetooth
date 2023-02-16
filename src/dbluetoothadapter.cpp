@@ -13,11 +13,7 @@ using DTK_CORE_NAMESPACE::emplace_tag;
 
 DAdapterPrivate::DAdapterPrivate(quint64 adapterId, DAdapter *parent)
     : DObjectPrivate(parent)
-#ifdef USE_FAKE_INTERFACE
-    , m_adapter(new DAdapterInterface("/org/deepin/fakebluez/hci" + QString::number(adapterId)))
-#else
     , m_adapter(new DAdapterInterface("/org/bluez/hci" + QString::number(adapterId)))
-#endif
 {
 }
 
@@ -119,15 +115,16 @@ bool DAdapter::discovering() const
     return d->m_adapter->discovering();
 }
 
-QSharedPointer<DDevice> DAdapter::deviceFromAddress(const QString &deviceAddress) const
+DExpected<QSharedPointer<DDevice>> DAdapter::deviceFromAddress(const QString &deviceAddress) const
 {
     D_DC(DAdapter);
-    const auto &deviceList = devices().value_or(QStringList{});
+    const auto &reply = devices();
+    if (!reply)
+        return DUnexpected(reply.error());
+    const auto &deviceList = reply.value();
     const auto &adapterPath = d->m_adapter->adapterPath();
-    if (deviceList.empty())
-        return nullptr;
     if (!deviceList.contains(DeviceAddrToDBusPath(adapterPath, deviceAddress)))
-        return nullptr;
+        return DUnexpected{emplace_tag::USE_EMPLACE, -1, "no such device in current adapter"};
     return QSharedPointer<DDevice>(new DDevice(adapterPath, deviceAddress));
 }
 
@@ -138,11 +135,12 @@ DExpected<QStringList> DAdapter::devices() const
     reply.waitForFinished();
     if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
-    auto DeviceList =
-        getSpecificObject(reply.value(),
-                          {QString(BlueZDeviceInterface)},
-                          MapVariantMap{{QString(BlueZDeviceInterface),
-                                         QVariantMap{{QString("Adapter"), QVariant::fromValue(d->m_adapter->adapterPath())}}}});
+    auto DeviceList = getSpecificObject(
+        reply.value(),
+        {QString(BlueZDeviceInterface)},
+        MapVariantMap{{QString(BlueZDeviceInterface),
+                       QVariantMap{{QString("Adapter"),
+                                    QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(d->m_adapter->adapterPath()))}}}});
     QStringList ret;
     for (const auto &device : DeviceList)
         ret.append(DBusPathToDeviceAddr(device));

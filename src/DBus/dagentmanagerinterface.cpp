@@ -17,7 +17,8 @@ DAgentManagerInterface::DAgentManagerInterface(QObject *parent)
     const auto &Service = QLatin1String(FakeBlueZService);
     const auto &Connection = QDBusConnection::sessionBus();
 #endif
-    m_inter = new DDBusInterface(Service, "/org/bluez", "org.bluez.AgentManager1", Connection, this);
+    m_inter =
+        new DDBusInterface(Service, QLatin1String("/org/bluez"), QLatin1String(BlueZAgentManagerInterface), Connection, this);
 }
 
 QDBusPendingReply<void> DAgentManagerInterface::registerAgent(const QDBusObjectPath &agent, const QString &cap)

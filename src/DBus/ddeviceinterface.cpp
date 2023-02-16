@@ -5,6 +5,7 @@
 #include "ddeviceinterface.h"
 #include "btdispatcher.h"
 #include "dbluetoothutils.h"
+#include <QObject>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -13,17 +14,16 @@ DDeviceInterface::DDeviceInterface(const QString &path, QObject *parent)
 {
 #ifndef USE_FAKE_INTERFACE
     const auto &Service = QLatin1String(BlueZService);
-    auto Connection = QDBusConnection::systemBus();
+    const auto &Connection = QDBusConnection::systemBus();
 #else
     const auto &Service = QLatin1String(FakeBlueZService);
-    auto Connection = QDBusConnection::sessionBus();
+    const auto &Connection = QDBusConnection::sessionBus();
 #endif
-    const auto &Interface = QLatin1String(BlueZDeviceInterface);
-    m_inter = new DDBusInterface(Service, path, Interface, Connection, this);
+    m_inter = new DDBusInterface(Service, path, QLatin1String(BlueZDeviceInterface), Connection, this);
 #ifndef USE_FAKE_INTERFACE
-    m_inter->connect(
+    BluetoothDispatcher::connect(
         &BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceRemoved, this, [this](const QDBusObjectPath &device) {
-            if (device.path() == this->m_inter->path())
+            if (m_inter->path() == device.path())
                 Q_EMIT removed();
         });
 #endif

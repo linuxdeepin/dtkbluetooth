@@ -15,9 +15,19 @@ DBLUETOOTH_BEGIN_NAMESPACE
 
 enum class AgentError : quint8 { Canceled, Rejected };
 
-enum class RequestDest { OrgBluezAgent, OrgBluezObexAgent };
+enum class RequestDest : quint8 { OrgBluezAgent, OrgBluezObexAgent };
 
-using fileInfo = QPair<int, QVariantMap>;
+enum class ObexSessionType : quint8 { Client, Server };
+
+struct ObexSessionInfo
+{
+    ObexSessionType sessionInfo;
+    quint64 sessionId;
+    bool operator==(const ObexSessionInfo &other)
+    {
+        return (sessionInfo == other.sessionInfo) and (sessionId == other.sessionId);
+    }
+};
 
 DBLUETOOTH_END_NAMESPACE
 

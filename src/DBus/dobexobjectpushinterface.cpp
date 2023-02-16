@@ -14,29 +14,30 @@ DBLUETOOTH_BEGIN_NAMESPACE
 DObexObjectPushInterface::DObexObjectPushInterface(const QString &path, QObject *parent)
     : QObject(parent)
 {
-    qRegisterMetaType<fileInfo_p>("fileInfo_p");
-    qDBusRegisterMetaType<fileInfo_p>();
-
 #ifndef USE_FAKE_INTERFACE
     const auto &Service = QLatin1String(BlueZObexService);
-    auto Connection = QDBusConnection::systemBus();
+    const auto &Connection = QDBusConnection::systemBus();
 #else
     const auto &Service = QLatin1String(FakeBlueZObexService);
-    auto Connection = QDBusConnection::sessionBus();
+    const auto &Connection = QDBusConnection::sessionBus();
 #endif
     const auto &Interface = QLatin1String(BlueZObexObjectPushInterface);
     m_inter = new DDBusInterface(Service, path, Interface, Connection, this);
 #ifndef USE_FAKE_INTERFACE
-    m_inter->connect(&BluetoothObexDispatcher::instance(), &BluetoothObexDispatcher::objectPushAdded, this, [this](const QDBusObjectPath &objectPush){
-        if(m_inter->path() == objectPush.path())
-            removed();
-    });
+    connect(&BluetoothObexDispatcher::instance(),
+            &BluetoothObexDispatcher::transferAdded,
+            this,
+            [this](const QDBusObjectPath &transfer) { Q_EMIT transferAdded(DBusPathToTransferId(transfer.path())); });
+    connect(&BluetoothObexDispatcher::instance(),
+            &BluetoothObexDispatcher::transferRemoved,
+            this,
+            [this](const QDBusObjectPath &transfer) { Q_EMIT transferRemoved(DBusPathToTransferId(transfer.path())); });
 #endif
-
 }
 
-QDBusPendingReply<fileInfo_p> DObexObjectPushInterface::sendFile(const QFileInfo &filePath){
-    return m_inter->asyncCallWithArgumentList("SendFile", {QVariant::fromValue(filePath)});
+QDBusPendingReply<QDBusObjectPath, QVariantMap> DObexObjectPushInterface::sendFile(const QFileInfo &filePath)
+{
+    return m_inter->asyncCallWithArgumentList("SendFile", {QVariant::fromValue(filePath.absoluteFilePath())});
 }
 
 DBLUETOOTH_END_NAMESPACE

@@ -6,10 +6,8 @@
 #define DBLUETOOTHOBEXMANAGER_H
 
 #include "dbluetoothtypes.h"
-#include <QScopedPointer>
 #include <DExpected>
 #include <DObject>
-#include <dexpected.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -23,27 +21,26 @@ class DObexManagerPrivate;
 class DObexManager : public QObject, public DObject
 {
     Q_OBJECT
-    friend class DObexManager;
 public:
-
     explicit DObexManager(QObject *parent = nullptr);
     ~DObexManager() override = default;
 
-    Q_PROPERTY(bool available READ available);
-    Q_PROPERTY(QList<quint64> sessions READ sessions);
+    Q_PROPERTY(bool available READ available CONSTANT);
 
     bool available() const;
-    QList<quint64> sessions() const;
 
 public Q_SLOTS:
-    DExpected<QSharedPointer<DObexSession>> createSessionObject(const QString &destination, const QVariantMap& args);
-    DExpected<void> registerAgent(const QSharedPointer<DObexAgent> &sessionId);
-    DExpected<void> unregisterAgent(const QSharedPointer<DObexAgent> &agent);
-    DExpected<void> requestDefaultAgent(const QSharedPointer<DObexAgent> &agent);
+    DExpected<ObexSessionInfo> createSession(const QString &destination, const QVariantMap &args) const;
+    DExpected<void> removeSession(const QSharedPointer<DObexSession> session) const;
+    DExpected<void> registerAgent(const QSharedPointer<DObexAgent> &agent) const;
+    DExpected<void> unregisterAgent(const QSharedPointer<DObexAgent> &agent) const;
+
+    DExpected<QList<ObexSessionInfo>> sessions() const;
+    DExpected<QSharedPointer<DObexSession>> sessionFromInfo(const ObexSessionInfo &info);
 
 Q_SIGNALS:
-    void availableChanged(const bool &available);
-    void sessionsChanged(const QStringList &adapters);
+    void sessionAdded(const ObexSessionInfo &info);
+    void sessionRemoved(const ObexSessionInfo &info);
 
 private:
     D_DECLARE_PRIVATE(DObexManager)

@@ -18,7 +18,7 @@ class DAgent : public QObject
 {
     Q_OBJECT
 public:
-    enum class Capability { DisplayOnly, DisplayYesNo, KeyboardOnly, NoInputNoOutput };
+    enum Capability { DisplayOnly, DisplayYesNo, KeyboardOnly, NoInputNoOutput };
 
     Q_ENUM(Capability)
 

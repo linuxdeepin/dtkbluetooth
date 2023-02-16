@@ -25,30 +25,29 @@ public:
     ~DObexTransferInterface() override = default;
 
     Q_PROPERTY(QString status READ status NOTIFY statusChanged);
-    Q_PROPERTY(quint64 session READ session NOTIFY sessionChanged);
-    Q_PROPERTY(QString name READ name NOTIFY nameChanged);
-    Q_PROPERTY(quint64 size READ size NOTIFY sizeChanged);
+    Q_PROPERTY(QDBusObjectPath session READ session CONSTANT);
+    Q_PROPERTY(QString name READ name CONSTANT);
+    Q_PROPERTY(quint64 size READ size CONSTANT);
     Q_PROPERTY(quint64 transferred READ transferred NOTIFY transferredChanged);
-    Q_PROPERTY(QString filename READ filename NOTIFY filenameChanged);
-
+    Q_PROPERTY(QString filename READ filename CONSTANT);
+    Q_PROPERTY(QString type READ type CONSTANT);
 
     QString status() const;
-    quint64 session() const;
+    QDBusObjectPath session() const;
+    QString type() const;
     QString name() const;
     quint64 size() const;
     quint64 transferred() const;
     QString filename() const;
 
 public Q_SLOTS:
-    QDBusPendingReply<void> cancel();
+    QDBusPendingReply<void> cancel() const;
+    QDBusPendingReply<void> suspend() const;
+    QDBusPendingReply<void> resume() const;
 
 Q_SIGNALS:
-    void statusChanged(QString status);
-    void sessionChanged(quint64 session);
-    void nameChanged(QString name);
-    void sizeChanged(quint64 size);
+    void statusChanged(const QString &status);
     void transferredChanged(quint64 transferred);
-    void filenameChanged(QString filename);
 
     void removed();
 

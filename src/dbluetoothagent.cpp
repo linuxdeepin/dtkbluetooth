@@ -13,7 +13,7 @@ DAgent::DAgent(QObject *parent)
 
 DAgent::Capability DAgent::capability() const
 {
-    return Capability::DisplayYesNo;
+    return DisplayYesNo;
 }
 
 void DAgent::requestPinCode(QSharedPointer<DDevice>, const DRequest<QString> &request)

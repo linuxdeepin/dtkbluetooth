@@ -20,21 +20,18 @@ DAdapterInterface::DAdapterInterface(const QString &path, QObject *parent)
 #endif
     m_inter = new DDBusInterface(Service, path, QLatin1String(BlueZAdapterInterface), Connection, this);
 #ifndef USE_FAKE_INTERFACE
-    m_inter->connect(
-        &BluetoothDispatcher::instance(), &BluetoothDispatcher::adapterRemoved, this, [this](const QDBusObjectPath &adapter) {
-            if (m_inter->path() == adapter.path())
-                Q_EMIT removed();
-        });
-    m_inter->connect(
-        &BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceAdded, this, [this](const QDBusObjectPath &devices) {
-            if (devices.path().contains(adapterPath()))
-                Q_EMIT deviceAdded(DBusPathToDeviceAddr(devices));
-        });
-    m_inter->connect(
-        &BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceRemoved, this, [this](const QDBusObjectPath &devices) {
-            if (devices.path().contains(adapterPath()))
-                Q_EMIT deviceRemoved(DBusPathToDeviceAddr(devices));
-        });
+    connect(&BluetoothDispatcher::instance(), &BluetoothDispatcher::adapterRemoved, this, [this](const QDBusObjectPath &adapter) {
+        if (m_inter->path() == adapter.path())
+            Q_EMIT removed();
+    });
+    connect(&BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceAdded, this, [this](const QDBusObjectPath &devices) {
+        if (devices.path().contains(adapterPath()))
+            Q_EMIT deviceAdded(DBusPathToDeviceAddr(devices));
+    });
+    connect(&BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceRemoved, this, [this](const QDBusObjectPath &devices) {
+        if (devices.path().contains(adapterPath()))
+            Q_EMIT deviceRemoved(DBusPathToDeviceAddr(devices));
+    });
 #endif
 }
 

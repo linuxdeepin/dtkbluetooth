@@ -30,8 +30,6 @@ Q_SIGNALS:
     void sessionRemoved(const QDBusObjectPath &sessions);
     void transferAdded(const QDBusObjectPath &transfers);
     void transferRemoved(const QDBusObjectPath &transfers);
-    void objectPushAdded(const QDBusObjectPath &objectPushs);
-    void objectPushRemoved(const QDBusObjectPath &objectPushs);
 };
 
 DBLUETOOTH_END_NAMESPACE

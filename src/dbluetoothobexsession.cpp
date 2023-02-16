@@ -4,78 +4,112 @@
 
 #include "dbluetoothobexsession_p.h"
 #include "dbluetoothutils.h"
-#include <dobject.h>
+#include "dbluetoothtypes.h"
+#include "dbluetoothobextransfer_p.h"
+#include "btobexdispatcher.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
 using DCORE_NAMESPACE::DUnexpected;
 using DTK_CORE_NAMESPACE::emplace_tag;
 
-DObexSessionPrivate::DObexSessionPrivate(quint64 sessionId, DObexSession *parent)
+DObexSessionPrivate::DObexSessionPrivate(const QString &path, DObexSession *parent)
     : DObjectPrivate(parent)
-#ifdef USE_FAKE_INTERFACE
-    , m_obexsession(new DObexSessionInterface("/org/bluez/obex/client/session" + QString::number(sessionId)))
-    , m_obexobjectpush((new DObexObjectPushInterface("/org/bluez/obex/client/session" + QString::number(sessionId))))
-#else
-    , m_obexsession(new DObexSessionInterface("/org/bluez/obex/client/session" + QString::number(sessionId)))
-    , m_obexobjectpush((new DObexObjectPushInterface("/org/bluez/obex/client/session" + QString::number(sessionId))))
-#endif
+    , m_obexsession(new DObexSessionInterface(path))
+    , m_obexobjectpush(new DObexObjectPushInterface(path))
 {
 }
 
 DObexSessionPrivate::~DObexSessionPrivate()
 {
     delete m_obexsession;
+    delete m_obexobjectpush;
 }
 
-DObexSession::DObexSession(quint64 sessionId, QObject *parent)
+DObexSession::DObexSession(const ObexSessionInfo &info, QObject *parent)
     : QObject(parent)
-    , DObject(*new DObexSessionPrivate(sessionId, this))
+    , DObject(*new DObexSessionPrivate(sessionInfoToDBusPath(info), this))
 {
     D_DC(DObexSession);
-    connect(d->m_obexsession, &DObexSessionInterface::sourceChanged, this, &DObexSession::sourceChanged);
-    connect(d->m_obexsession, &DObexSessionInterface::destinationChanged, this, &DObexSession::destinationChanged);
-    connect(d->m_obexsession, &DObexSessionInterface::sessionIdChanged, this, &DObexSession::sessionIdChanged);
+    connect(d->m_obexsession, &DObexSessionInterface::removed, this, &DObexSession::removed);
+    connect(d->m_obexobjectpush, &DObexObjectPushInterface::transferAdded, this, &DObexSession::transferAdded);
+    connect(d->m_obexobjectpush, &DObexObjectPushInterface::transferRemoved, this, &DObexSession::transferRemoved);
 }
 
-QString DObexSession::source() const{
+QString DObexSession::source() const
+{
     D_DC(DObexSession);
     return d->m_obexsession->source();
 }
 
-QString DObexSession::destination() const{
+QString DObexSession::destination() const
+{
     D_DC(DObexSession);
     return d->m_obexsession->destination();
 }
 
-quint64 DObexSession::sessionId() const{
+QBluetoothUuid DObexSession::target() const
+{
     D_DC(DObexSession);
-    return d->m_obexsession->sessionId();
+    return QBluetoothUuid{d->m_obexsession->target()};
 }
 
-DExpected<QString> DObexSession::capabilities(){
+QDir DObexSession::root() const
+{
+    D_DC(DObexSession);
+    return d->m_obexsession->root();
+}
+
+DExpected<QList<quint64>> DObexSession::transfers() const
+{
+    auto reply = BluetoothObexDispatcher::instance().getManagedObjects();
+    reply.waitForFinished();
+    if (!reply.isValid()) {
+        return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
+    }
+    const auto &transferList = getSpecificObject(
+        reply.value(),
+        {QString(BlueZObexTransferInterface)},
+        {{QString(BlueZObexTransferInterface),
+          QVariantMap{{QString("Session"),
+                       QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(sessionInfoToDBusPath(currentSession())))}}}});
+    QList<quint64> ret;
+    for (const auto &transfer : transferList)
+        ret.append(DBusPathToTransferId(transfer.path()));
+    return ret;
+}
+
+DExpected<QSharedPointer<DObexTransfer>> DObexSession::transferFromId(quint64 transferId) const
+{
+    const auto &reply = transfers();
+    if (!reply)
+        return DUnexpected(reply.error());
+    const auto &transferList = reply.value();
+    if (!transferList.contains(transferId))
+        return DUnexpected(emplace_tag::USE_EMPLACE, -1, "no such transfer in current session");
+    return QSharedPointer<DObexTransfer>(new DObexTransfer(currentSession(), transferId));
+}
+
+DExpected<QString> DObexSession::capabilities()
+{
     D_DC(DObexSession);
     auto reply = d->m_obexsession->getCapabilities();
     reply.waitForFinished();
-    if(!reply.isValid())
+    if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
     return {};
 }
 
-DExpected<QSharedPointer<DObexSession>> DObexSession::fromId(const quint64 sessionId){
-    return QSharedPointer<DObexSession>{new DObexSession(sessionId)};
-}
-
-DExpected<fileInfo> DObexSession::sendFile(const QFileInfo &filePath){
+DExpected<quint64> DObexSession::sendFile(const QFileInfo &file) const
+{
     D_DC(DObexSession);
-    auto reply = d->m_obexobjectpush->sendFile(filePath);
+    if (!file.exists() or !file.isFile())
+        return DUnexpected{emplace_tag::USE_EMPLACE, -1, "File does not exist or is not a file"};
+    auto reply = d->m_obexobjectpush->sendFile(file);
     reply.waitForFinished();
-    if(!reply.isValid())
+    if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
-    return {};
+    return DBusPathToTransferId(reply.argumentAt<0>().path());
 }
-
-
-
 
 DBLUETOOTH_END_NAMESPACE

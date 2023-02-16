@@ -13,6 +13,9 @@ file(GLOB_RECURSE TEST_FILES "./*.h" "./*.cpp")
 
 add_compile_definitions(USE_FAKE_INTERFACE)
 
+find_package(QT NAMES Qt5 REQUIRED COMPONENTS Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core DBus Bluetooth)
+
 add_executable(${LIB_NAME}
     ${INCLUDE_FILES}
     ${SRCS}

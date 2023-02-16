@@ -6,14 +6,10 @@
 #define DOBEXAGENTMANAGERINTERFACE_H
 
 #include "dtkbluetooth_global.h"
-#include "dbluetoothdbustypes.h"
 #include <QObject>
-#include <DObject>
 #include <QDBusObjectPath>
 #include <DDBusInterface>
 #include <QDBusPendingReply>
-#include <qdbusextratypes.h>
-#include <qobjectdefs.h>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -28,14 +24,11 @@ public:
 
 public Q_SLOTS:
 
-    void registerAgent(const QDBusObjectPath &agent);
-    void unregisterAgent(const QDBusObjectPath &agent);
-
-Q_SIGNALS:
+    QDBusPendingReply<void> registerAgent(const QDBusObjectPath &agent) const;
+    QDBusPendingReply<void> unregisterAgent(const QDBusObjectPath &agent) const;
 
 private:
     DDBusInterface *m_inter{nullptr};
-
 };
 
 DBLUETOOTH_END_NAMESPACE

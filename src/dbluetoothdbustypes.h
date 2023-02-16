@@ -14,7 +14,6 @@ DBLUETOOTH_BEGIN_NAMESPACE
 
 using ObjectMap = QMap<QDBusObjectPath, QMap<QString, QVariantMap>>;
 using MapVariantMap = QMap<QString, QVariantMap>;
-using fileInfo_p = QPair<QDBusObjectPath, QVariantMap>;
 
 DBLUETOOTH_END_NAMESPACE
 

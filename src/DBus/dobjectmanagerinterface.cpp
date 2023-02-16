@@ -17,21 +17,25 @@ DObjectManagerInterface::DObjectManagerInterface(const QString &service, QObject
     qRegisterMetaType<MapVariantMap>("MapVariantMap");
 
 #ifndef USE_FAKE_INTERFACE
-    auto Connection = QDBusConnection::systemBus();
+    auto connection = QDBusConnection::systemBus();
 #else
-    auto Connection = QDBusConnection::sessionBus();
+    auto connection = QDBusConnection::sessionBus();
 #endif
     const auto &Path = QLatin1String("/");
     const auto &Interface = QLatin1String("org.freedesktop.DBus.ObjectManager");
-    Connection.connect(
-        service, Path, Interface, "InterfacesAdded", this, SLOT(InterfacesAdd(const QDBusObjectPath &, const Interfaces &)));
-    Connection.connect(service,
+    connection.connect(service,
                        Path,
                        Interface,
-                       "InterfacesRemoved",
+                       QLatin1String("InterfacesAdded"),
+                       this,
+                       SLOT(InterfacesAdd(const QDBusObjectPath &, const Interfaces &)));
+    connection.connect(service,
+                       Path,
+                       Interface,
+                       QLatin1String("InterfacesRemoved"),
                        this,
                        SLOT(InterfacesRemove(const QDBusObjectPath &, const QStringList &)));
-    m_inter = new DDBusInterface(service, Path, Interface, Connection, this);
+    m_inter = new DDBusInterface(service, Path, Interface, connection, this);
 }
 
 QDBusPendingReply<ObjectMap> DObjectManagerInterface::getManagedObjects()

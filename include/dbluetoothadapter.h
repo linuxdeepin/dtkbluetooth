@@ -51,13 +51,13 @@ public:
     quint32 discoverableTimeout() const;
     void setDiscoverableTimeout(quint32 discoverableTimeout);
     bool discovering() const;
-    QSharedPointer<DDevice> deviceFromAddress(const QString &deviceAddress) const;
 
+    DExpected<QSharedPointer<DDevice>> deviceFromAddress(const QString &deviceAddress) const;
+    DExpected<QStringList> devices() const;
 public Q_SLOTS:
     DExpected<void> removeDevice(const QString &device) const;
     DExpected<void> startDiscovery() const;
     DExpected<void> stopDiscovery() const;
-    DExpected<QStringList> devices() const;
 
 Q_SIGNALS:
     void addressTypeChanged(DDevice::AddressType type);

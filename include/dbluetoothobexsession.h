@@ -6,52 +6,51 @@
 #define DBLUETOOTHOBEXSESSION_H
 
 #include "dbluetoothtypes.h"
-#include <QScopedPointer>
 #include <DExpected>
 #include <DObject>
-#include <dexpected.h>
 #include <QFileInfo>
+#include <QDir>
+#include <QBluetoothUuid>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
 using DTK_CORE_NAMESPACE::DExpected;
 using DTK_CORE_NAMESPACE::DObject;
 
-
 class DObexTransfer;
-class DObexObjectPush;
 class DObexSessionPrivate;
 
 class DObexSession : public QObject, public DObject
 {
     Q_OBJECT
+    explicit DObexSession(const ObexSessionInfo &info, QObject *parent = nullptr);
     friend class DObexManager;
-public:
 
-    explicit DObexSession(quint64 sessionId, QObject *parent = nullptr);
+public:
     ~DObexSession() override = default;
 
-    Q_PROPERTY(QString source READ source NOTIFY sourceChanged);
-    Q_PROPERTY(QString destination READ destination NOTIFY destinationChanged);
-    Q_PROPERTY(quint64 sessionId READ sessionId NOTIFY sessionIdChanged);
+    Q_PROPERTY(QString source READ source CONSTANT);
+    Q_PROPERTY(QString destination READ destination CONSTANT);
+    Q_PROPERTY(QBluetoothUuid target READ target CONSTANT);
+    Q_PROPERTY(QDir root READ root CONSTANT);
+    Q_PROPERTY(ObexSessionInfo currentSession READ currentSession CONSTANT)
 
     QString source() const;
     QString destination() const;
-    quint64 sessionId() const;
+    QBluetoothUuid target() const;
+    QDir root() const;
+    ObexSessionInfo currentSession() const;
+
+    DExpected<QList<quint64>> transfers() const;
+    DExpected<QSharedPointer<DObexTransfer>> transferFromId(quint64 transferId) const;
 
 public Q_SLOTS:
-    static DExpected<QSharedPointer<DObexSession>> fromId(const quint64 sessionId);
-
     DExpected<QString> capabilities();
-
-    DExpected<fileInfo> sendFile(const QFileInfo &filePath);
-
-
+    DExpected<quint64> sendFile(const QFileInfo &file) const;
 
 Q_SIGNALS:
-    void sourceChanged(const QString &source);
-    void destinationChanged(const QString &destination);
-    void sessionIdChanged(const quint64 &sessionId);
+    void transferAdded(quint64 transferId);
+    void transferRemoved(quint64 transferId);
 
     void removed();
 

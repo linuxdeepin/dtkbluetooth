@@ -6,8 +6,8 @@
 #define DBLUETOOTHOBEXTRANSFER_H
 
 #include "dbluetoothtypes.h"
-#include <QScopedPointer>
 #include <DExpected>
+#include <QFileInfo>
 #include <DObject>
 
 DBLUETOOTH_BEGIN_NAMESPACE
@@ -17,50 +17,40 @@ using DTK_CORE_NAMESPACE::DObject;
 
 class DObexTransferPrivate;
 
-enum transferStatus{
-    queued, 
-    active, 
-    suspended,
-    complete,
-    error
-};
-
 class DObexTransfer : public QObject, public DObject
 {
     Q_OBJECT
-    explicit DObexTransfer(quint64 sessionId, quint64 transferId, QObject *parent = nullptr);
-    friend class DObexManager;
+    explicit DObexTransfer(const ObexSessionInfo &info, quint64 transferId, QObject *parent = nullptr);
+    friend class DObexSession;
 
 public:
     ~DObexTransfer() override;
 
+    enum TransferStatus { Queued, Active, Suspended, Complete, Error };
+    Q_ENUM(TransferStatus)
 
-    Q_PROPERTY(transferStatus status READ status NOTIFY statusChanged);
-    Q_PROPERTY(quint64 session READ session NOTIFY sessionChanged);
-    Q_PROPERTY(QString name READ name NOTIFY nameChanged);
-    Q_PROPERTY(quint64 size READ size NOTIFY sizeChanged);
+    Q_PROPERTY(TransferStatus status READ status NOTIFY statusChanged);
+    Q_PROPERTY(ObexSessionInfo session READ session CONSTANT);
+    Q_PROPERTY(QString name READ name CONSTANT);
+    Q_PROPERTY(quint64 size READ size CONSTANT);
+    Q_PROPERTY(QString type READ type CONSTANT);
     Q_PROPERTY(quint64 transferred READ transferred NOTIFY transferredChanged);
-    Q_PROPERTY(QString filename READ filename NOTIFY filenameChanged);
+    Q_PROPERTY(QFileInfo filename READ filename CONSTANT);
 
-
-    transferStatus status() const;
-    quint64 session() const;
+    TransferStatus status() const;
+    ObexSessionInfo session() const;
     QString name() const;
+    QString type() const;
     quint64 size() const;
     quint64 transferred() const;
-    QString filename() const;
-
+    QFileInfo filename() const;
 
 public Q_SLOTS:
-    DExpected<void> cancel();
+    DExpected<void> cancel() const;
 
 Q_SIGNALS:
-    void statusChanged(transferStatus status);
-    void sessionChanged(quint64 session);
-    void nameChanged(QString name);
-    void sizeChanged(quint64 size);
+    void statusChanged(TransferStatus status);
     void transferredChanged(quint64 transferred);
-    void filenameChanged(QString filename);
 
     void removed();
 

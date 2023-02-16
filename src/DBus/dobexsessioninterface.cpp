@@ -15,39 +15,49 @@ DObexSessionInterface::DObexSessionInterface(const QString &path, QObject *paren
 {
 #ifndef USE_FAKE_INTERFACE
     const auto &Service = QLatin1String(BlueZObexService);
-    auto Connection = QDBusConnection::systemBus();
+    const auto &Connection = QDBusConnection::systemBus();
 #else
     const auto &Service = QLatin1String(FakeBlueZObexService);
-    auto Connection = QDBusConnection::sessionBus();
+    const auto &Connection = QDBusConnection::sessionBus();
 #endif
     const auto &Interface = QLatin1String(BlueZObexSessionInterface);
     m_inter = new DDBusInterface(Service, path, Interface, Connection, this);
 #ifndef USE_FAKE_INTERFACE
 
-    m_inter->connect(&BluetoothObexDispatcher::instance(), &BluetoothObexDispatcher::sessionAdded, this, [this](const QDBusObjectPath &session){
-        if(m_inter->path() == session.path())
-            removed();
-    });
+    connect(&BluetoothObexDispatcher::instance(),
+            &BluetoothObexDispatcher::sessionRemoved,
+            this,
+            [this](const QDBusObjectPath &session) {
+                if (m_inter->path() == session.path())
+                    removed();
+            });
 
 #endif
 }
 
-QString DObexSessionInterface::source() const{
+QString DObexSessionInterface::source() const
+{
     return qdbus_cast<QString>(m_inter->property("Source"));
 }
 
-QString DObexSessionInterface::destination() const{
+QString DObexSessionInterface::destination() const
+{
     return qdbus_cast<QString>(m_inter->property("Destination"));
 }
 
-quint64 DObexSessionInterface::sessionId() const{
-    auto pathStr = m_inter->path();
-    return getSessionId(pathStr);
+QString DObexSessionInterface::root() const
+{
+    return qdbus_cast<QString>(m_inter->property("Root"));
 }
 
-QDBusPendingReply<QString> DObexSessionInterface::getCapabilities(){
+QString DObexSessionInterface::target() const
+{
+    return qdbus_cast<QString>(m_inter->property("Target"));
+}
+
+QDBusPendingReply<QString> DObexSessionInterface::getCapabilities()
+{
     return m_inter->asyncCall("GetCapabilities");
 }
-
 
 DBLUETOOTH_END_NAMESPACE

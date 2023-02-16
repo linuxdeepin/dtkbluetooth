@@ -23,23 +23,24 @@ public:
     explicit DObexSessionInterface(const QString &path, QObject *parent = nullptr);
     ~DObexSessionInterface() override = default;
 
-    Q_PROPERTY(QString source READ source NOTIFY sourceChanged);
-    Q_PROPERTY(QString destination READ destination NOTIFY destinationChanged);
-    Q_PROPERTY(quint64 sessionId READ sessionId NOTIFY sessionIdChanged);
+    Q_PROPERTY(QString source READ source CONSTANT);
+    Q_PROPERTY(QString destination READ destination CONSTANT);
+    Q_PROPERTY(QString target READ target CONSTANT);
+    Q_PROPERTY(QString root READ root CONSTANT);
 
     QString source() const;
     QString destination() const;
-    quint64 sessionId() const;
+    QString target() const;
+    QString root() const;
 
 public Q_SLOTS:
     QDBusPendingReply<QString> getCapabilities();
 
 Q_SIGNALS:
-    void sourceChanged(const QString &source);
-    void destinationChanged(const QString &destination);
-    void sessionIdChanged(const quint64 &sessionId);
 
     void removed();
+    void transferAdded(quint64 transferId);
+    void transferRemoved(quint64 transferId);
 
 private:
     DDBusInterface *m_inter{nullptr};

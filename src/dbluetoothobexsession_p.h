@@ -17,7 +17,7 @@ using DTK_CORE_NAMESPACE::DObjectPrivate;
 class DObexSessionPrivate : public DObjectPrivate
 {
 public:
-    explicit DObexSessionPrivate(quint64 sessionId, DObexSession *parent = nullptr);
+    explicit DObexSessionPrivate(const QString &path, DObexSession *parent = nullptr);
     ~DObexSessionPrivate() override;
 
     DObexSessionInterface *m_obexsession{nullptr};

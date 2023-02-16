@@ -11,9 +11,8 @@
 #include <DObject>
 #include <QDBusObjectPath>
 #include <DDBusInterface>
-#include <QDBusPendingReply>
-#include <qobjectdefs.h>
 #include <QFileInfo>
+#include <QDBusPendingReply>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -27,10 +26,11 @@ public:
     ~DObexObjectPushInterface() override = default;
 
 public Q_SLOTS:
-    QDBusPendingReply<fileInfo_p> sendFile(const QFileInfo &filePath);
+    QDBusPendingReply<QDBusObjectPath, QVariantMap> sendFile(const QFileInfo &filePath);
 
 Q_SIGNALS:
-    void removed();
+    void transferAdded(quint64 transferId);
+    void transferRemoved(quint64 transferId);
 
 private:
     DDBusInterface *m_inter{nullptr};

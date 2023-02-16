@@ -18,7 +18,7 @@ void BluetoothDispatcher::dispatchAdded(const QDBusObjectPath &path, const MapVa
 {
     if (interfaces.find(QString(BlueZAdapterInterface)) != interfaces.cend())
         Q_EMIT adapterAdded(path);
-    else if (interfaces.find(QString(BlueZDeviceInterface)) != interfaces.cend())
+    if (interfaces.find(QString(BlueZDeviceInterface)) != interfaces.cend())
         Q_EMIT deviceAdded(path);
     return;
 }
@@ -27,7 +27,7 @@ void BluetoothDispatcher::dispatchRemoved(const QDBusObjectPath &path, const QSt
 {
     if (args.contains(QString(BlueZAdapterInterface)))
         Q_EMIT adapterRemoved(path);
-    else if (args.contains(QString(BlueZDeviceInterface)))
+    if (args.contains(QString(BlueZDeviceInterface)))
         Q_EMIT deviceRemoved(path);
     return;
 }

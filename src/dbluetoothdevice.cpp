@@ -8,6 +8,7 @@
 #include <DExpected>
 #include <DObject>
 #include <QList>
+#include <QBluetoothAddress>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -93,7 +94,7 @@ void DDevice::setTrusted(bool trusted)
     d->m_device->setTrusted(trusted);
 }
 
-qint64 DDevice::adapter() const
+quint64 DDevice::adapter() const
 {
     D_DC(DDevice);
     return DBusPathToAdapterId(d->m_device->adapter());
@@ -129,20 +130,25 @@ bool DDevice::isValid() const
     return d->m_device->isValid();
 }
 
-DBluetoothDeviceInfo DDevice::deviceInfo() const
+QBluetoothDeviceInfo DDevice::deviceInfo() const
 {
     D_DC(DDevice);
     QList<QBluetoothUuid> uuidList;
     for (const auto &uuid : d->m_device->UUIDs())
         uuidList.append(QBluetoothUuid(uuid));
-    DBluetoothDeviceInfo info(QBluetoothAddress(d->m_device->address()), d->m_device->name(), d->m_device->Class());
-    info.setAppearance(d->m_device->appearance());
+    QBluetoothDeviceInfo info(QBluetoothAddress(d->m_device->address()), d->m_device->name(), d->m_device->Class());
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     info.setServiceUuids(uuidList);
 #else
     info.setServiceUuids(uuidList.toVector());
 #endif
     return info;
+}
+
+quint16 DDevice::appearance() const
+{
+    D_DC(DDevice);
+    return d->m_device->appearance();
 }
 
 qint16 DDevice::RSSI() const

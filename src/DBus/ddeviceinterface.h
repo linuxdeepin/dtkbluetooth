@@ -8,15 +8,10 @@
 #include "dtkbluetooth_global.h"
 #include "dbluetoothdbustypes.h"
 #include <QObject>
-#include <DObject>
 #include <QDBusObjectPath>
 #include <DDBusInterface>
 #include <QDBusPendingReply>
-#include <ddbusinterface.h>
-#include <qdbusextratypes.h>
-#include <qobjectdefs.h>
 #include <QBluetoothUuid>
-#include <QBluetoothDeviceInfo>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 

@@ -25,6 +25,9 @@ static constexpr auto &BlueZDeviceInterface = "org.bluez.Device1";
 static constexpr auto &BlueZObexSessionInterface = "org.bluez.obex.Session1";
 static constexpr auto &BlueZObexTransferInterface = "org.bluez.obex.Transfer1";
 static constexpr auto &BlueZObexObjectPushInterface = "org.bluez.obex.ObjectPush1";
+static constexpr auto &BlueZAgentManagerInterface = "org.bluez.AgentManager1";
+static constexpr auto &BlueZObexAgentManagerInterface = "org.bluez.obex.AgentManager1";
+static constexpr auto &BlueZObexClientInterface = "org.bluez.obex.Client1";
 
 inline QList<QDBusObjectPath>
 getSpecificObject(const ObjectMap &objects, const QStringList &requiredInterfaces, const MapVariantMap &values = {})
@@ -91,53 +94,65 @@ inline QString DeviceAddrToDBusPath(const QString &adapter, QString device)
     return adapter + rawDeviceStr;
 }
 
-inline QString transferstatusToString(transferStatus transferstatus)
+inline QString transferstatusToString(DObexTransfer::TransferStatus transferstatus)
 {
     switch (transferstatus) {
-        case queued:
+        case DObexTransfer::Queued:
             return "queued";
-        case active:
+        case DObexTransfer::Active:
             return "active";
-        case suspended:
+        case DObexTransfer::Suspended:
             return "suspended";
-        case complete:
+        case DObexTransfer::Complete:
             return "complete";
-        case error:
+        case DObexTransfer::Error:
             return "error";
-        default:
-            return QString{};
     }
 }
 
-inline transferStatus stringToTransferstatus(const QString &statusStr)
+inline DObexTransfer::TransferStatus stringToTransferstatus(const QString &statusStr)
 {
     if (statusStr == "queued")
-        return queued;
+        return DObexTransfer::Queued;
     else if (statusStr == "active")
-        return active;
+        return DObexTransfer::Active;
     else if (statusStr == "suspended")
-        return suspended;
+        return DObexTransfer::Suspended;
     else if (statusStr == "complete")
-        return complete;
+        return DObexTransfer::Complete;
     else
-        return error;
+        return DObexTransfer::Error;
 }
 
-inline quint64 getSessionId(QString pathStr)
+inline ObexSessionInfo DBusPathToSessionInfo(const QDBusObjectPath &path)
 {
-    return pathStr.split("/").last().mid(7).toUInt();  // session UBI: "/org/bluez/obex/client/session0"
+    // session UBI: "/org/bluez/obex/client{server}/session0"
+    const auto &list = path.path().split("/");
+    quint64 id = list.last().mid(7).toUInt();
+    ObexSessionType info{ObexSessionType::Client};
+    if (list[list.size() - 2] == "server")
+        info = ObexSessionType::Server;
+    return ObexSessionInfo{info, id};
+}
+
+inline QString sessionInfoToDBusPath(const ObexSessionInfo &info)
+{
+    QString dest{"client"};
+    if (info.sessionInfo == ObexSessionType::Server)
+        dest = QLatin1String("server");
+    return "/org/bluez/obex/" % dest % "session" % QString::number(info.sessionId);
 }
 
 inline QString agentCapToString(const DAgent::Capability cap)
 {
     switch (cap) {
-        case DAgent::Capability::DisplayOnly:
+        case DAgent::DisplayOnly:
             return "DisplayOnly";
-        case DAgent::Capability::DisplayYesNo:
+        case DAgent::DisplayYesNo:
             return "DisplayYesNo";
-        case DAgent::Capability::KeyboardOnly:
+        case DAgent::KeyboardOnly:
             return "KeyboardOnly";
-        case DAgent::Capability::NoInputNoOutput:
+        case DAgent::NoInputNoOutput:
             return "NoInputNoOutput";
         default:
             return QString{};
@@ -147,9 +162,9 @@ inline QString agentCapToString(const DAgent::Capability cap)
 inline QString addressTypeToString(DDevice::AddressType type)
 {
     switch (type) {
-        case DDevice::AddressType::Public:
+        case DDevice::Public:
             return "public";
-        case DDevice::AddressType::Random:
+        case DDevice::Random:
             return "random";
         default:
             return QString{};
@@ -159,11 +174,22 @@ inline QString addressTypeToString(DDevice::AddressType type)
 inline DDevice::AddressType stringToAddressType(const QString &type)
 {
     if (type == "public")
-        return DDevice::AddressType::Public;
+        return DDevice::Public;
     else if (type == "random")
-        return DDevice::AddressType::Random;
+        return DDevice::Random;
     else
-        return DDevice::AddressType::Unknown;
+        return DDevice::Unknown;
+}
+
+inline quint64 DBusPathToTransferId(const QString &transfer)
+{
+    // obex transfer UBI: "/org/bluez/obex/client{server}/session0/transfer0"
+    return transfer.split("/").last().mid(8).toUInt();
+}
+
+inline QString TransferIdToDBusPath(const QString &sessionPath, quint64 transferId)
+{
+    return sessionPath % "/transfer" % QString::number(transferId);
 }
 
 DBLUETOOTH_END_NAMESPACE

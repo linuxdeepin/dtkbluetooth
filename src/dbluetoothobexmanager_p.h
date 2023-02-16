@@ -5,8 +5,9 @@
 #ifndef DBLUETOOTHOBEXMANAGER_P_H
 #define DBLUETOOTHOBEXMANAGER_P_H
 
-#include "dobexagentmanagerinterface.h"
 #include <DObjectPrivate>
+#include "dobexagentmanagerinterface.h"
+#include "dobexclientinterface.h"
 #include "dbluetoothobexmanager.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE
@@ -19,7 +20,8 @@ public:
     explicit DObexManagerPrivate(DObexManager *parent = nullptr);
     ~DObexManagerPrivate() override;
 
-    DObexAgentManagerInterface *m_obexmanager{nullptr};
+    DObexAgentManagerInterface *m_obexAgentManager{nullptr};
+    DObexClientInterface *m_client{nullptr};
     D_DECLARE_PUBLIC(DObexManager)
 };
 

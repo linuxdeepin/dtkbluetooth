@@ -28,14 +28,18 @@ public:
 
     Q_PROPERTY(bool available READ available CONSTANT);
 
-    DExpected<QList<quint64>> adapters() const;
     bool available() const;
-
+    DExpected<QList<quint64>> adapters() const;
+    DExpected<QSharedPointer<DAdapter>> adapterFromId(quint64 adapterId) const;
 public Q_SLOTS:
-    QSharedPointer<DAdapter> adapterFromId(quint64 adapterId);
+
     DExpected<void> registerAgent(const QSharedPointer<DAgent> &agent);
     DExpected<void> unregisterAgent(const QSharedPointer<DAgent> &agent);
     DExpected<void> requestDefaultAgent(const QSharedPointer<DAgent> &agent);
+
+Q_SIGNALS:
+    void adapterAdded(quint64 adapterId);
+    void adapterRemoved(quint64 adapterId);
 
 private:
     D_DECLARE_PRIVATE(DManager)

@@ -5,9 +5,10 @@
 #ifndef DBLUETOOTHDEVICE_H
 #define DBLUETOOTHDEVICE_H
 
-#include "dbluetoothdeviceinfo.h"
+#include "dtkbluetooth_global.h"
 #include <DExpected>
 #include <DObject>
+#include <QBluetoothDeviceInfo>
 
 DBLUETOOTH_BEGIN_NAMESPACE
 
@@ -26,7 +27,8 @@ class DDevice : public QObject, public DObject
 public:
     ~DDevice() override;
 
-    enum class AddressType : quint8 { Public, Random, Unknown };
+    enum AddressType : quint8 { Public, Random, Unknown };
+    Q_ENUM(AddressType)
 
     Q_PROPERTY(bool blocked READ blocked WRITE setBlocked NOTIFY blockedChanged);
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged);
@@ -34,13 +36,14 @@ public:
     Q_PROPERTY(bool paired READ paired NOTIFY pairedChanged);
     Q_PROPERTY(bool servicesResolved READ servicesResolved NOTIFY servicesResolvedChanged);
     Q_PROPERTY(bool trusted READ trusted WRITE setTrusted NOTIFY trustedChanged);
-    Q_PROPERTY(qint64 adapter READ adapter CONSTANT);
+    Q_PROPERTY(quint64 adapter READ adapter CONSTANT);
     Q_PROPERTY(QString address READ address CONSTANT);
-    Q_PROPERTY(DDevice::AddressType addressType READ addressType NOTIFY addressTypeChanged)
+    Q_PROPERTY(AddressType addressType READ addressType NOTIFY addressTypeChanged)
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged);
     Q_PROPERTY(qint16 RSSI READ RSSI NOTIFY RSSIChanged);
-    Q_PROPERTY(DBluetoothDeviceInfo deviceInfo READ deviceInfo CONSTANT);
+    Q_PROPERTY(QBluetoothDeviceInfo deviceInfo READ deviceInfo CONSTANT);
     Q_PROPERTY(QString icon READ icon CONSTANT);
+    Q_PROPERTY(quint16 appearance READ appearance CONSTANT);
 
     bool blocked() const;
     void setBlocked(bool blocked);
@@ -50,13 +53,14 @@ public:
     bool servicesResolved() const;
     bool trusted() const;
     void setTrusted(bool trusted);
-    qint64 adapter() const;
+    quint64 adapter() const;
     QString address() const;
     AddressType addressType() const;
     QString alias() const;
-    DBluetoothDeviceInfo deviceInfo() const;
+    QBluetoothDeviceInfo deviceInfo() const;
     QString icon() const;
     qint16 RSSI() const;
+    quint16 appearance() const;
     bool isValid() const;
 
 public Q_SLOTS:
