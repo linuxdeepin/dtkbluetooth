@@ -33,6 +33,8 @@ public:
     QString target() const;
     QString root() const;
 
+    QString DBusPath() const;
+
 public Q_SLOTS:
     QDBusPendingReply<QString> getCapabilities();
 

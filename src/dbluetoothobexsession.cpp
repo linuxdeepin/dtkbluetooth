@@ -60,6 +60,12 @@ QDir DObexSession::root() const
     return d->m_obexsession->root();
 }
 
+ObexSessionInfo DObexSession::currentSession() const
+{
+    D_DC(DObexSession);
+    return DBusPathToSessionInfo(QDBusObjectPath(d->m_obexsession->DBusPath()));
+}
+
 DExpected<QList<quint64>> DObexSession::transfers() const
 {
     auto reply = BluetoothObexDispatcher::instance().getManagedObjects();

@@ -55,6 +55,11 @@ QString DObexSessionInterface::target() const
     return qdbus_cast<QString>(m_inter->property("Target"));
 }
 
+QString DObexSessionInterface::DBusPath() const
+{
+    return m_inter->path();
+}
+
 QDBusPendingReply<QString> DObexSessionInterface::getCapabilities()
 {
     return m_inter->asyncCall("GetCapabilities");
