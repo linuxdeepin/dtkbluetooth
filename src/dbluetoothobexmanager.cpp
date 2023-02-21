@@ -100,7 +100,7 @@ DExpected<void> DObexManager::removeSession(const QSharedPointer<DObexSession> s
 DExpected<void> DObexManager::registerAgent(const QSharedPointer<DObexAgent> &agent) const
 {
     D_DC(DObexManager);
-    auto reply = d->m_obexAgentManager->registerAgent(agent->objectPath());
+    auto reply = d->m_obexAgentManager->registerAgent(agent->agentPath());
     reply.waitForFinished();
     if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
@@ -110,7 +110,7 @@ DExpected<void> DObexManager::registerAgent(const QSharedPointer<DObexAgent> &ag
 DExpected<void> DObexManager::unregisterAgent(const QSharedPointer<DObexAgent> &agent) const
 {
     D_DC(DObexManager);
-    auto reply = d->m_obexAgentManager->unregisterAgent(agent->objectPath());
+    auto reply = d->m_obexAgentManager->unregisterAgent(agent->agentPath());
     reply.waitForFinished();
     if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};

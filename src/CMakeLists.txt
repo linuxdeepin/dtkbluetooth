@@ -14,6 +14,10 @@ add_library(${LIB_NAME} SHARED
     ${SRCS}
 )
 
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    add_compile_definitions(USE_FAKE_INTERFACE)
+endif()
+
 target_include_directories(${LIB_NAME}
 PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>

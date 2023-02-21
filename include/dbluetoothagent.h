@@ -23,7 +23,7 @@ public:
     Q_ENUM(Capability)
 
     explicit DAgent(QObject *parent = nullptr);
-    ~DAgent() override;
+    ~DAgent() override = default;
     virtual QDBusObjectPath agentPath() const = 0;
     virtual Capability capability() const;
 

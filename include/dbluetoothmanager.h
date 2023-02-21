@@ -5,10 +5,9 @@
 #ifndef DBLUETOOTHMANAGER_H
 #define DBLUETOOTHMANAGER_H
 
-#include <QScopedPointer>
+#include <QSharedPointer>
 #include <DExpected>
 #include <DObject>
-#include <dexpected.h>
 #include "dbluetoothadapter.h"
 
 DBLUETOOTH_BEGIN_NAMESPACE

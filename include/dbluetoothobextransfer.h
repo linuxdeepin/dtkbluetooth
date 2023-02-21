@@ -26,7 +26,7 @@ class DObexTransfer : public QObject, public DObject
 public:
     ~DObexTransfer() override;
 
-    enum TransferStatus { Queued, Active, Suspended, Complete, Error };
+    enum TransferStatus { Unknown, Queued, Active, Suspended, Complete, Error };
     Q_ENUM(TransferStatus)
 
     Q_PROPERTY(TransferStatus status READ status NOTIFY statusChanged);

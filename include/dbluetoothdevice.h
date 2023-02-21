@@ -38,8 +38,9 @@ public:
     Q_PROPERTY(bool trusted READ trusted WRITE setTrusted NOTIFY trustedChanged);
     Q_PROPERTY(quint64 adapter READ adapter CONSTANT);
     Q_PROPERTY(QString address READ address CONSTANT);
-    Q_PROPERTY(AddressType addressType READ addressType NOTIFY addressTypeChanged)
+    Q_PROPERTY(AddressType addressType READ addressType NOTIFY addressTypeChanged);
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged);
+    Q_PROPERTY(QString name READ name CONSTANT);
     Q_PROPERTY(qint16 RSSI READ RSSI NOTIFY RSSIChanged);
     Q_PROPERTY(QBluetoothDeviceInfo deviceInfo READ deviceInfo CONSTANT);
     Q_PROPERTY(QString icon READ icon CONSTANT);
@@ -57,6 +58,7 @@ public:
     QString address() const;
     AddressType addressType() const;
     QString alias() const;
+    QString name() const;
     QBluetoothDeviceInfo deviceInfo() const;
     QString icon() const;
     qint16 RSSI() const;

@@ -20,7 +20,7 @@ class DObexAgent : public QObject
 public:
     explicit DObexAgent(QObject *parent = nullptr);
 
-    virtual QDBusObjectPath objectPath() const = 0;
+    virtual QDBusObjectPath agentPath() const = 0;
     ~DObexAgent() override = default;
 
     virtual void

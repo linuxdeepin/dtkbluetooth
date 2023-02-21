@@ -118,6 +118,12 @@ QString DDevice::alias() const
     return d->m_device->alias();
 }
 
+QString DDevice::name() const
+{
+    D_DC(DDevice);
+    return d->m_device->name();
+}
+
 QString DDevice::icon() const
 {
     D_DC(DDevice);
@@ -137,6 +143,7 @@ QBluetoothDeviceInfo DDevice::deviceInfo() const
     for (const auto &uuid : d->m_device->UUIDs())
         uuidList.append(QBluetoothUuid(uuid));
     QBluetoothDeviceInfo info(QBluetoothAddress(d->m_device->address()), d->m_device->name(), d->m_device->Class());
+    info.setRssi(d->m_device->RSSI());
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     info.setServiceUuids(uuidList);
 #else

@@ -2,37 +2,28 @@
 #
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-set(LIB_NAME ut-${LIB_NAME})
+set(BIN_NAME ut-${LIB_NAME})
 
-file(GLOB_RECURSE INCLUDE_FILES "../include/*.h")
-file(GLOB_RECURSE SRCS
-    "../src/*.h"
-    "../src/*.cpp"
-)
 file(GLOB_RECURSE TEST_FILES "./*.h" "./*.cpp")
 
-add_compile_definitions(USE_FAKE_INTERFACE)
-
-find_package(QT NAMES Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core DBus Bluetooth)
-
-add_executable(${LIB_NAME}
+add_executable(${BIN_NAME}
     ${INCLUDE_FILES}
     ${SRCS}
     ${TEST_FILES}
 )
 
-target_include_directories(${LIB_NAME} PUBLIC
-    ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/src
-    ${PROJECT_SOURCE_DIR}/src/DBus
+add_dependencies(${BIN_NAME} ${LIB_NAME})
+
+target_include_directories(${BIN_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/tests/fakeDBus
+    ${PROJECT_SOURCE_DIR}/src
 )
 
-target_link_libraries(${LIB_NAME} PRIVATE
+target_link_libraries(${BIN_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::DBus
     Qt${QT_VERSION_MAJOR}::Bluetooth
+    ${LIB_NAME}
     Dtk::Core
     pthread
     gcov
@@ -41,13 +32,13 @@ target_link_libraries(${LIB_NAME} PRIVATE
 )
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(${LIB_NAME} PRIVATE -fprofile-instr-generate -ftest-coverage)
+    target_compile_options(${BIN_NAME} PRIVATE -fprofile-instr-generate -ftest-coverage)
 endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    target_compile_options(${LIB_NAME} PRIVATE -fprofile-arcs -ftest-coverage)
+    target_compile_options(${BIN_NAME} PRIVATE -fprofile-arcs -ftest-coverage)
 endif()
 
-target_compile_options(${LIB_NAME} PRIVATE -fno-access-control)
+target_compile_options(${BIN_NAME} PRIVATE -fno-access-control)
 
 enable_testing()
-add_test(NAME ${LIB_NAME} COMMAND ${LIB_NAME})
+add_test(NAME ${BIN_NAME} COMMAND ${BIN_NAME})

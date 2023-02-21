@@ -107,6 +107,8 @@ inline QString transferstatusToString(DObexTransfer::TransferStatus transferstat
             return "complete";
         case DObexTransfer::Error:
             return "error";
+        default:
+            return QString{};
     }
 }
 
@@ -120,8 +122,10 @@ inline DObexTransfer::TransferStatus stringToTransferstatus(const QString &statu
         return DObexTransfer::Suspended;
     else if (statusStr == "complete")
         return DObexTransfer::Complete;
-    else
+    else if (statusStr == "error")
         return DObexTransfer::Error;
+    else
+        return DObexTransfer::Unknown;
 }
 
 inline ObexSessionInfo dBusPathToSessionInfo(const QDBusObjectPath &path)
@@ -140,7 +144,7 @@ inline QString sessionInfoToDBusPath(const ObexSessionInfo &info)
     QString dest{"client"};
     if (info.sessionInfo == ObexSessionType::Server)
         dest = QLatin1String("server");
-    return "/org/bluez/obex/" % dest % "session" % QString::number(info.sessionId);
+    return "/org/bluez/obex/" % dest % "/session" % QString::number(info.sessionId);
 }
 
 inline QString agentCapToString(const DAgent::Capability cap)

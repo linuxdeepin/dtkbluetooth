@@ -17,7 +17,7 @@ DObexTransferInterface::DObexTransferInterface(const QString &path, QObject *par
     const auto &Service = QLatin1String(BlueZObexService);
     const auto &Connection = QDBusConnection::systemBus();
 #else
-    const auto &Service = QLatin1String(FakeBlueZService);
+    const auto &Service = QLatin1String(FakeBlueZObexService);
     const auto &Connection = QDBusConnection::sessionBus();
 #endif
     const auto &Interface = QLatin1String(BlueZObexTransferInterface);

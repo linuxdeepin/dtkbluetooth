@@ -23,7 +23,7 @@ struct ObexSessionInfo
 {
     ObexSessionType sessionInfo;
     quint64 sessionId;
-    bool operator==(const ObexSessionInfo &other)
+    bool operator==(const ObexSessionInfo &other) const
     {
         return (sessionInfo == other.sessionInfo) and (sessionId == other.sessionId);
     }

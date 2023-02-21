@@ -30,12 +30,12 @@ public:
     Q_PROPERTY(bool paired READ paired NOTIFY pairedChanged);
     Q_PROPERTY(bool servicesResolved READ servicesResolved NOTIFY servicesResolvedChanged);
     Q_PROPERTY(bool trusted READ trusted WRITE setTrusted NOTIFY trustedChanged);
-    Q_PROPERTY(QString adapter READ adapter NOTIFY adapterChanged);
+    Q_PROPERTY(QString adapter READ adapter CONSTANT);
     Q_PROPERTY(QString address READ address CONSTANT);
-    Q_PROPERTY(QString addressType READ addressType NOTIFY addressTypeChangde)
+    Q_PROPERTY(QString addressType READ addressType NOTIFY addressTypeChangde);
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged);
-    Q_PROPERTY(quint32 Class READ Class CONSTANT)
-    Q_PROPERTY(quint16 appearance READ appearance CONSTANT)
+    Q_PROPERTY(quint32 Class READ Class CONSTANT);
+    Q_PROPERTY(quint16 appearance READ appearance CONSTANT);
     Q_PROPERTY(QStringList UUIDs READ UUIDs CONSTANT);
     Q_PROPERTY(QString icon READ icon CONSTANT);
     Q_PROPERTY(QString name READ name NOTIFY nameChanged);

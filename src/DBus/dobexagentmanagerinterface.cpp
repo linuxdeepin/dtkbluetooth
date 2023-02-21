@@ -21,7 +21,7 @@ DObexAgentManagerInterface::DObexAgentManagerInterface(QObject *parent)
     const auto &Service = QLatin1String(FakeBlueZObexService);
 #endif
     m_inter = new DDBusInterface(
-        Service, QLatin1String("/org/bluez/obex/"), QLatin1String(BlueZObexAgentManagerInterface), Connection, this);
+        Service, QLatin1String("/org/bluez/obex"), QLatin1String(BlueZObexAgentManagerInterface), Connection, this);
 }
 
 QDBusPendingReply<void> DObexAgentManagerInterface::registerAgent(const QDBusObjectPath &agent) const
