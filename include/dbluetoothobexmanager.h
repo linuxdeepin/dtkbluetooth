@@ -25,7 +25,7 @@ public:
     explicit DObexManager(QObject *parent = nullptr);
     ~DObexManager() override = default;
 
-    Q_PROPERTY(bool available READ available CONSTANT);
+    Q_PROPERTY(bool available READ available CONSTANT)
 
     bool available() const;
 

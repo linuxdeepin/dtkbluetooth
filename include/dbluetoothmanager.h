@@ -25,7 +25,7 @@ public:
     explicit DManager(QObject *parent = nullptr);
     ~DManager() override = default;
 
-    Q_PROPERTY(bool available READ available CONSTANT);
+    Q_PROPERTY(bool available READ available CONSTANT)
 
     bool available() const;
     DExpected<QList<quint64>> adapters() const;

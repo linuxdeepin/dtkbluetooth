@@ -38,7 +38,7 @@ DDevice::DDevice(const QString &adapterPath, const QString &deviceAddress, QObje
     connect(d->m_device, &DDeviceInterface::trustedChanged, this, &DDevice::trustedChanged);
     connect(d->m_device, &DDeviceInterface::aliasChanged, this, &DDevice::aliasChanged);
     connect(d->m_device, &DDeviceInterface::RSSIChanged, this, &DDevice::RSSIChanged);
-    connect(d->m_device, &DDeviceInterface::addressTypeChangde, this, [this](const QString &type) {
+    connect(d->m_device, &DDeviceInterface::addressTypeChanged, this, [this](const QString &type) {
         Q_EMIT addressTypeChanged(stringToAddressType(type));
     });
     connect(d->m_device, &DDeviceInterface::removed, this, &DDevice::removed);

@@ -30,21 +30,21 @@ public:
     enum AddressType : quint8 { Public, Random, Unknown };
     Q_ENUM(AddressType)
 
-    Q_PROPERTY(bool blocked READ blocked WRITE setBlocked NOTIFY blockedChanged);
-    Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged);
-    Q_PROPERTY(bool legacyPairing READ legacyPairing CONSTANT);
-    Q_PROPERTY(bool paired READ paired NOTIFY pairedChanged);
-    Q_PROPERTY(bool servicesResolved READ servicesResolved NOTIFY servicesResolvedChanged);
-    Q_PROPERTY(bool trusted READ trusted WRITE setTrusted NOTIFY trustedChanged);
-    Q_PROPERTY(quint64 adapter READ adapter CONSTANT);
-    Q_PROPERTY(QString address READ address CONSTANT);
-    Q_PROPERTY(AddressType addressType READ addressType NOTIFY addressTypeChanged);
-    Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged);
-    Q_PROPERTY(QString name READ name CONSTANT);
-    Q_PROPERTY(qint16 RSSI READ RSSI NOTIFY RSSIChanged);
-    Q_PROPERTY(QBluetoothDeviceInfo deviceInfo READ deviceInfo CONSTANT);
-    Q_PROPERTY(QString icon READ icon CONSTANT);
-    Q_PROPERTY(quint16 appearance READ appearance CONSTANT);
+    Q_PROPERTY(bool blocked READ blocked WRITE setBlocked NOTIFY blockedChanged)
+    Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
+    Q_PROPERTY(bool legacyPairing READ legacyPairing CONSTANT)
+    Q_PROPERTY(bool paired READ paired NOTIFY pairedChanged)
+    Q_PROPERTY(bool servicesResolved READ servicesResolved NOTIFY servicesResolvedChanged)
+    Q_PROPERTY(bool trusted READ trusted WRITE setTrusted NOTIFY trustedChanged)
+    Q_PROPERTY(quint64 adapter READ adapter CONSTANT)
+    Q_PROPERTY(QString address READ address CONSTANT)
+    Q_PROPERTY(AddressType addressType READ addressType NOTIFY addressTypeChanged)
+    Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged)
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(qint16 RSSI READ RSSI NOTIFY RSSIChanged)
+    Q_PROPERTY(QBluetoothDeviceInfo deviceInfo READ deviceInfo CONSTANT)
+    Q_PROPERTY(QString icon READ icon CONSTANT)
+    Q_PROPERTY(quint16 appearance READ appearance CONSTANT)
 
     bool blocked() const;
     void setBlocked(bool blocked);

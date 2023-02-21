@@ -29,13 +29,13 @@ public:
     enum TransferStatus { Unknown, Queued, Active, Suspended, Complete, Error };
     Q_ENUM(TransferStatus)
 
-    Q_PROPERTY(TransferStatus status READ status NOTIFY statusChanged);
-    Q_PROPERTY(ObexSessionInfo session READ session CONSTANT);
-    Q_PROPERTY(QString name READ name CONSTANT);
-    Q_PROPERTY(quint64 size READ size CONSTANT);
-    Q_PROPERTY(QString type READ type CONSTANT);
-    Q_PROPERTY(quint64 transferred READ transferred NOTIFY transferredChanged);
-    Q_PROPERTY(QFileInfo filename READ filename CONSTANT);
+    Q_PROPERTY(TransferStatus status READ status NOTIFY statusChanged)
+    Q_PROPERTY(ObexSessionInfo session READ session CONSTANT)
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(quint64 size READ size CONSTANT)
+    Q_PROPERTY(QString type READ type CONSTANT)
+    Q_PROPERTY(quint64 transferred READ transferred NOTIFY transferredChanged)
+    Q_PROPERTY(QFileInfo filename READ filename CONSTANT)
 
     TransferStatus status() const;
     ObexSessionInfo session() const;

@@ -21,10 +21,10 @@ public:
 
     ~FakeObexSessionService() { unregisterService(); }
 
-    Q_PROPERTY(QString Source READ source);
-    Q_PROPERTY(QString Destination READ destination);
-    Q_PROPERTY(QString Target READ target);
-    Q_PROPERTY(QString Root READ root);
+    Q_PROPERTY(QString Source READ source)
+    Q_PROPERTY(QString Destination READ destination)
+    Q_PROPERTY(QString Target READ target)
+    Q_PROPERTY(QString Root READ root)
 
     QString m_source{"AA:AA:AA:AA:AA:AA"};
     QString m_destination{"BB:BB:BB:BB:BB:BB"};

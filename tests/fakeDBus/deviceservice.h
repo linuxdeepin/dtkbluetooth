@@ -20,22 +20,22 @@ public:
     }
     ~FakeDeviceService() { unregisterService(); }
 
-    Q_PROPERTY(bool Blocked READ blocked WRITE setBlocked);
-    Q_PROPERTY(bool Connected READ connected);
-    Q_PROPERTY(bool LegacyPairing READ legacyPairing);
-    Q_PROPERTY(bool Paired READ paired);
-    Q_PROPERTY(bool ServicesResolved READ servicesResolved);
-    Q_PROPERTY(bool Trusted READ trusted WRITE setTrusted);
-    Q_PROPERTY(QString Adapter READ adapter);
-    Q_PROPERTY(QString Address READ address);
-    Q_PROPERTY(QString AddressType READ addressType);
-    Q_PROPERTY(QString Alias READ alias);
-    Q_PROPERTY(quint32 Class READ Class);
-    Q_PROPERTY(quint16 Appearance READ appearance);
-    Q_PROPERTY(QStringList UUIDs READ UUIDs);
-    Q_PROPERTY(QString Icon READ icon);
-    Q_PROPERTY(QString Name READ name);
-    Q_PROPERTY(qint16 RSSI READ RSSI);
+    Q_PROPERTY(bool Blocked READ blocked WRITE setBlocked)
+    Q_PROPERTY(bool Connected READ connected)
+    Q_PROPERTY(bool LegacyPairing READ legacyPairing)
+    Q_PROPERTY(bool Paired READ paired)
+    Q_PROPERTY(bool ServicesResolved READ servicesResolved)
+    Q_PROPERTY(bool Trusted READ trusted WRITE setTrusted)
+    Q_PROPERTY(QString Adapter READ adapter)
+    Q_PROPERTY(QString Address READ address)
+    Q_PROPERTY(QString AddressType READ addressType)
+    Q_PROPERTY(QString Alias READ alias)
+    Q_PROPERTY(quint32 Class READ Class)
+    Q_PROPERTY(quint16 Appearance READ appearance)
+    Q_PROPERTY(QStringList UUIDs READ UUIDs)
+    Q_PROPERTY(QString Icon READ icon)
+    Q_PROPERTY(QString Name READ name)
+    Q_PROPERTY(qint16 RSSI READ RSSI)
 
     bool m_blocked{false};
     bool m_connected{false};

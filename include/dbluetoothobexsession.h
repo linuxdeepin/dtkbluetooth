@@ -29,10 +29,10 @@ class DObexSession : public QObject, public DObject
 public:
     ~DObexSession() override = default;
 
-    Q_PROPERTY(QString source READ source CONSTANT);
-    Q_PROPERTY(QString destination READ destination CONSTANT);
-    Q_PROPERTY(QBluetoothUuid target READ target CONSTANT);
-    Q_PROPERTY(QDir root READ root CONSTANT);
+    Q_PROPERTY(QString source READ source CONSTANT)
+    Q_PROPERTY(QString destination READ destination CONSTANT)
+    Q_PROPERTY(QBluetoothUuid target READ target CONSTANT)
+    Q_PROPERTY(QDir root READ root CONSTANT)
     Q_PROPERTY(ObexSessionInfo currentSession READ currentSession CONSTANT)
 
     QString source() const;

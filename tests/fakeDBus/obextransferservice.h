@@ -21,13 +21,13 @@ public:
 
     ~FakeObexTransferService() { unregisterService(); }
 
-    Q_PROPERTY(QString Status READ status);
-    Q_PROPERTY(QDBusObjectPath Session READ session);
-    Q_PROPERTY(QString Name READ name);
-    Q_PROPERTY(quint64 Size READ size);
-    Q_PROPERTY(quint64 Transferred READ transferred);
-    Q_PROPERTY(QString Filename READ filename);
-    Q_PROPERTY(QString Type READ type);
+    Q_PROPERTY(QString Status READ status)
+    Q_PROPERTY(QDBusObjectPath Session READ session)
+    Q_PROPERTY(QString Name READ name)
+    Q_PROPERTY(quint64 Size READ size)
+    Q_PROPERTY(quint64 Transferred READ transferred)
+    Q_PROPERTY(QString Filename READ filename)
+    Q_PROPERTY(QString Type READ type)
 
     QString m_status{"queued"};
     QDBusObjectPath m_session{"/org/bluez/obex/client/session0"};

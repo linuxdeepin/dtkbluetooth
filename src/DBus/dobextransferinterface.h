@@ -24,13 +24,13 @@ public:
     explicit DObexTransferInterface(const QString &path, QObject *parent = nullptr);
     ~DObexTransferInterface() override = default;
 
-    Q_PROPERTY(QString status READ status NOTIFY statusChanged);
-    Q_PROPERTY(QDBusObjectPath session READ session CONSTANT);
-    Q_PROPERTY(QString name READ name CONSTANT);
-    Q_PROPERTY(quint64 size READ size CONSTANT);
-    Q_PROPERTY(quint64 transferred READ transferred NOTIFY transferredChanged);
-    Q_PROPERTY(QString filename READ filename CONSTANT);
-    Q_PROPERTY(QString type READ type CONSTANT);
+    Q_PROPERTY(QString status READ status NOTIFY statusChanged)
+    Q_PROPERTY(QDBusObjectPath session READ session CONSTANT)
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(quint64 size READ size CONSTANT)
+    Q_PROPERTY(quint64 transferred READ transferred NOTIFY transferredChanged)
+    Q_PROPERTY(QString filename READ filename CONSTANT)
+    Q_PROPERTY(QString type READ type CONSTANT)
 
     QString status() const;
     QDBusObjectPath session() const;

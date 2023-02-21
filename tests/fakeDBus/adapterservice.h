@@ -20,14 +20,14 @@ public:
     }
     ~FakeAdapterService() override { unregisterService(); }
 
-    Q_PROPERTY(QString Address READ address CONSTANT);
-    Q_PROPERTY(QString AddressType READ addressType);
-    Q_PROPERTY(QString Name READ name);
-    Q_PROPERTY(QString Alias READ alias WRITE setAlias);
-    Q_PROPERTY(bool Powered READ powered WRITE setPowered);
-    Q_PROPERTY(bool Discoverable READ discoverable WRITE setDiscoverable);
-    Q_PROPERTY(quint32 DiscoverableTimeout READ discoverableTimeout WRITE setDiscoverableTimeout);
-    Q_PROPERTY(bool Discovering READ discovering);
+    Q_PROPERTY(QString Address READ address CONSTANT)
+    Q_PROPERTY(QString AddressType READ addressType)
+    Q_PROPERTY(QString Name READ name)
+    Q_PROPERTY(QString Alias READ alias WRITE setAlias)
+    Q_PROPERTY(bool Powered READ powered WRITE setPowered)
+    Q_PROPERTY(bool Discoverable READ discoverable WRITE setDiscoverable)
+    Q_PROPERTY(quint32 DiscoverableTimeout READ discoverableTimeout WRITE setDiscoverableTimeout)
+    Q_PROPERTY(bool Discovering READ discovering)
 
     QString m_address{"FF:FF:FF:FF:FF:FF"};
     QString m_addressType{"public"};

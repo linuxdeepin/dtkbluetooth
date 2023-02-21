@@ -23,10 +23,10 @@ public:
     explicit DObexSessionInterface(const QString &path, QObject *parent = nullptr);
     ~DObexSessionInterface() override = default;
 
-    Q_PROPERTY(QString source READ source CONSTANT);
-    Q_PROPERTY(QString destination READ destination CONSTANT);
-    Q_PROPERTY(QString target READ target CONSTANT);
-    Q_PROPERTY(QString root READ root CONSTANT);
+    Q_PROPERTY(QString source READ source CONSTANT)
+    Q_PROPERTY(QString destination READ destination CONSTANT)
+    Q_PROPERTY(QString target READ target CONSTANT)
+    Q_PROPERTY(QString root READ root CONSTANT)
 
     QString source() const;
     QString destination() const;
