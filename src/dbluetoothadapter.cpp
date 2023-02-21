@@ -123,7 +123,7 @@ DExpected<QSharedPointer<DDevice>> DAdapter::deviceFromAddress(const QString &de
         return DUnexpected(reply.error());
     const auto &deviceList = reply.value();
     const auto &adapterPath = d->m_adapter->adapterPath();
-    if (!deviceList.contains(DeviceAddrToDBusPath(adapterPath, deviceAddress)))
+    if (!deviceList.contains(deviceAddrToDBusPath(adapterPath, deviceAddress)))
         return DUnexpected{emplace_tag::USE_EMPLACE, -1, "no such device in current adapter"};
     return QSharedPointer<DDevice>(new DDevice(adapterPath, deviceAddress));
 }
@@ -143,14 +143,14 @@ DExpected<QStringList> DAdapter::devices() const
                                     QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(d->m_adapter->adapterPath()))}}}});
     QStringList ret;
     for (const auto &device : DeviceList)
-        ret.append(DBusPathToDeviceAddr(device));
+        ret.append(dBusPathToDeviceAddr(device));
     return ret;
 }
 
 DExpected<void> DAdapter::removeDevice(const QString &device) const
 {
     D_DC(DAdapter);
-    auto reply = d->m_adapter->removeDevice(QDBusObjectPath{DeviceAddrToDBusPath(d->m_adapter->adapterPath(), device)});
+    auto reply = d->m_adapter->removeDevice(QDBusObjectPath{deviceAddrToDBusPath(d->m_adapter->adapterPath(), device)});
     reply.waitForFinished();
     if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};

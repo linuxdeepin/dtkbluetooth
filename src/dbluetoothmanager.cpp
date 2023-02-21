@@ -30,11 +30,11 @@ DManager::DManager(QObject *parent)
     , DObject(*new DManagerPrivate(this))
 {
     connect(&BluetoothDispatcher::instance(), &BluetoothDispatcher::adapterAdded, this, [this](const QDBusObjectPath &adapter) {
-        Q_EMIT this->adapterAdded(DBusPathToAdapterId(adapter));
+        Q_EMIT this->adapterAdded(dBusPathToAdapterId(adapter));
     });
 
     connect(&BluetoothDispatcher::instance(), &BluetoothDispatcher::adapterRemoved, this, [this](const QDBusObjectPath &adapter) {
-        Q_EMIT this->adapterRemoved(DBusPathToAdapterId(adapter));
+        Q_EMIT this->adapterRemoved(dBusPathToAdapterId(adapter));
     });
 }
 
@@ -48,7 +48,7 @@ DExpected<QList<quint64>> DManager::adapters() const
     const auto &adapterList = getSpecificObject(reply.value(), {QString(BlueZAdapterInterface)});
     QList<quint64> ret;
     for (const auto &adapter : adapterList)
-        ret.append(DBusPathToAdapterId(adapter));
+        ret.append(dBusPathToAdapterId(adapter));
     return ret;
 };
 

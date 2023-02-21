@@ -35,12 +35,12 @@ DObexManager::DObexManager(QObject *parent)
     connect(&BluetoothObexDispatcher::instance(),
             &BluetoothObexDispatcher::sessionAdded,
             this,
-            [this](const QDBusObjectPath &session) { Q_EMIT this->sessionAdded(DBusPathToSessionInfo(session)); });
+            [this](const QDBusObjectPath &session) { Q_EMIT this->sessionAdded(dBusPathToSessionInfo(session)); });
 
     connect(&BluetoothObexDispatcher::instance(),
             &BluetoothObexDispatcher::sessionRemoved,
             this,
-            [this](const QDBusObjectPath &session) { Q_EMIT this->sessionRemoved(DBusPathToSessionInfo(session)); });
+            [this](const QDBusObjectPath &session) { Q_EMIT this->sessionRemoved(dBusPathToSessionInfo(session)); });
 }
 
 bool DObexManager::available() const
@@ -59,7 +59,7 @@ DExpected<ObexSessionInfo> DObexManager::createSession(const QString &destinatio
     reply.waitForFinished();
     if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
-    return DBusPathToSessionInfo(reply.value());
+    return dBusPathToSessionInfo(reply.value());
 }
 
 DExpected<QList<ObexSessionInfo>> DObexManager::sessions() const
@@ -72,7 +72,7 @@ DExpected<QList<ObexSessionInfo>> DObexManager::sessions() const
     const auto &sessionList = getSpecificObject(reply.value(), {QString(BlueZObexSessionInterface)});
     QList<ObexSessionInfo> ret;
     for (const auto &session : sessionList)
-        ret.append(DBusPathToSessionInfo(session));
+        ret.append(dBusPathToSessionInfo(session));
     return ret;
 }
 

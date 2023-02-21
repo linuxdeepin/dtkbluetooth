@@ -26,11 +26,11 @@ DAdapterInterface::DAdapterInterface(const QString &path, QObject *parent)
     });
     connect(&BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceAdded, this, [this](const QDBusObjectPath &devices) {
         if (devices.path().contains(adapterPath()))
-            Q_EMIT deviceAdded(DBusPathToDeviceAddr(devices));
+            Q_EMIT deviceAdded(dBusPathToDeviceAddr(devices));
     });
     connect(&BluetoothDispatcher::instance(), &BluetoothDispatcher::deviceRemoved, this, [this](const QDBusObjectPath &devices) {
         if (devices.path().contains(adapterPath()))
-            Q_EMIT deviceRemoved(DBusPathToDeviceAddr(devices));
+            Q_EMIT deviceRemoved(dBusPathToDeviceAddr(devices));
     });
 #endif
 }

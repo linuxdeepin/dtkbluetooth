@@ -28,7 +28,7 @@ DDevicePrivate::~DDevicePrivate()
 
 DDevice::DDevice(const QString &adapterPath, const QString &deviceAddress, QObject *parent)
     : QObject(parent)
-    , DObject(*new DDevicePrivate(DeviceAddrToDBusPath(adapterPath, deviceAddress), this))
+    , DObject(*new DDevicePrivate(deviceAddrToDBusPath(adapterPath, deviceAddress), this))
 {
     D_DC(DDevice);
     connect(d->m_device, &DDeviceInterface::blockedChanged, this, &DDevice::blockedChanged);
@@ -97,7 +97,7 @@ void DDevice::setTrusted(bool trusted)
 quint64 DDevice::adapter() const
 {
     D_DC(DDevice);
-    return DBusPathToAdapterId(d->m_device->adapter());
+    return dBusPathToAdapterId(d->m_device->adapter());
 }
 
 QString DDevice::address() const

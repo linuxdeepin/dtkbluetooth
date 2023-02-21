@@ -22,7 +22,7 @@ QSharedPointer<DDevice> DAgentAdaptor::deviceFromUbi(const QDBusObjectPath &devi
     const auto &str = device.path();
     int index = str.lastIndexOf("/");
     const auto &adapterPath = str.left(index);
-    const auto &deviceAddress = DBusPathToDeviceAddr(device);
+    const auto &deviceAddress = dBusPathToDeviceAddr(device);
     return QSharedPointer<DDevice>(new DDevice(adapterPath, deviceAddress));
 }
 

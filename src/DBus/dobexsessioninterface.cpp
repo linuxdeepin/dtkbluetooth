@@ -55,7 +55,7 @@ QString DObexSessionInterface::target() const
     return qdbus_cast<QString>(m_inter->property("Target"));
 }
 
-QString DObexSessionInterface::DBusPath() const
+QString DObexSessionInterface::dBusPath() const
 {
     return m_inter->path();
 }

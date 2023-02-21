@@ -27,11 +27,11 @@ DObexObjectPushInterface::DObexObjectPushInterface(const QString &path, QObject 
     connect(&BluetoothObexDispatcher::instance(),
             &BluetoothObexDispatcher::transferAdded,
             this,
-            [this](const QDBusObjectPath &transfer) { Q_EMIT transferAdded(DBusPathToTransferId(transfer.path())); });
+            [this](const QDBusObjectPath &transfer) { Q_EMIT transferAdded(dBusPathToTransferId(transfer.path())); });
     connect(&BluetoothObexDispatcher::instance(),
             &BluetoothObexDispatcher::transferRemoved,
             this,
-            [this](const QDBusObjectPath &transfer) { Q_EMIT transferRemoved(DBusPathToTransferId(transfer.path())); });
+            [this](const QDBusObjectPath &transfer) { Q_EMIT transferRemoved(dBusPathToTransferId(transfer.path())); });
 #endif
 }
 

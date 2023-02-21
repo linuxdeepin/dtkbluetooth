@@ -13,7 +13,7 @@ using DTK_CORE_NAMESPACE::emplace_tag;
 
 DObexTransferPrivate::DObexTransferPrivate(const ObexSessionInfo &info, quint64 transferId, DObexTransfer *parent)
     : DObjectPrivate(parent)
-    , m_obextransfer(new DObexTransferInterface(TransferIdToDBusPath(sessionInfoToDBusPath(info), transferId)))
+    , m_obextransfer(new DObexTransferInterface(transferIdToDBusPath(sessionInfoToDBusPath(info), transferId)))
 {
 }
 
@@ -45,7 +45,7 @@ DObexTransfer::TransferStatus DObexTransfer::status() const
 ObexSessionInfo DObexTransfer::session() const
 {
     D_DC(DObexTransfer);
-    return DBusPathToSessionInfo(d->m_obextransfer->session());
+    return dBusPathToSessionInfo(d->m_obextransfer->session());
 }
 
 QString DObexTransfer::name() const

@@ -68,27 +68,27 @@ getSpecificObject(const ObjectMap &objects, const QStringList &requiredInterface
     return ret;
 }
 
-inline quint64 DBusPathToAdapterId(const QString &path)
+inline quint64 dBusPathToAdapterId(const QString &path)
 {
     return path.split("/").last().mid(3).toUInt();  // Adapter UBI "/org/bluez/hci0"
 }
 
-inline qint64 DBusPathToAdapterId(const QDBusObjectPath &path)
+inline qint64 dBusPathToAdapterId(const QDBusObjectPath &path)
 {
-    return DBusPathToAdapterId(path.path());
+    return dBusPathToAdapterId(path.path());
 }
 
-inline QString AdapterIdToDBusPath(quint64 id)
+inline QString adapterIdToDBusPath(quint64 id)
 {
     return QString("/org/bluez/hci") + QString::number(id);
 }
 
-inline QString DBusPathToDeviceAddr(const QDBusObjectPath &path)
+inline QString dBusPathToDeviceAddr(const QDBusObjectPath &path)
 {
     return path.path().split("/").last().mid(4).replace("_", ":");  // device UBI: "/org/bluez/hci0/dev_XX_XX_XX_XX_XX_XX"
 }
 
-inline QString DeviceAddrToDBusPath(const QString &adapter, QString device)
+inline QString deviceAddrToDBusPath(const QString &adapter, QString device)
 {
     const auto &rawDeviceStr = "/dev_" + device.replace(":", "_");
     return adapter + rawDeviceStr;
@@ -124,7 +124,7 @@ inline DObexTransfer::TransferStatus stringToTransferstatus(const QString &statu
         return DObexTransfer::Error;
 }
 
-inline ObexSessionInfo DBusPathToSessionInfo(const QDBusObjectPath &path)
+inline ObexSessionInfo dBusPathToSessionInfo(const QDBusObjectPath &path)
 {
     // session UBI: "/org/bluez/obex/client{server}/session0"
     const auto &list = path.path().split("/");
@@ -181,13 +181,13 @@ inline DDevice::AddressType stringToAddressType(const QString &type)
         return DDevice::Unknown;
 }
 
-inline quint64 DBusPathToTransferId(const QString &transfer)
+inline quint64 dBusPathToTransferId(const QString &transfer)
 {
     // obex transfer UBI: "/org/bluez/obex/client{server}/session0/transfer0"
     return transfer.split("/").last().mid(8).toUInt();
 }
 
-inline QString TransferIdToDBusPath(const QString &sessionPath, quint64 transferId)
+inline QString transferIdToDBusPath(const QString &sessionPath, quint64 transferId)
 {
     return sessionPath % "/transfer" % QString::number(transferId);
 }

@@ -63,7 +63,7 @@ QDir DObexSession::root() const
 ObexSessionInfo DObexSession::currentSession() const
 {
     D_DC(DObexSession);
-    return DBusPathToSessionInfo(QDBusObjectPath(d->m_obexsession->DBusPath()));
+    return dBusPathToSessionInfo(QDBusObjectPath(d->m_obexsession->dBusPath()));
 }
 
 DExpected<QList<quint64>> DObexSession::transfers() const
@@ -81,7 +81,7 @@ DExpected<QList<quint64>> DObexSession::transfers() const
                        QVariant::fromValue<QDBusObjectPath>(QDBusObjectPath(sessionInfoToDBusPath(currentSession())))}}}});
     QList<quint64> ret;
     for (const auto &transfer : transferList)
-        ret.append(DBusPathToTransferId(transfer.path()));
+        ret.append(dBusPathToTransferId(transfer.path()));
     return ret;
 }
 
@@ -115,7 +115,7 @@ DExpected<quint64> DObexSession::sendFile(const QFileInfo &file) const
     reply.waitForFinished();
     if (!reply.isValid())
         return DUnexpected{emplace_tag::USE_EMPLACE, reply.error().type(), reply.error().message()};
-    return DBusPathToTransferId(reply.argumentAt<0>().path());
+    return dBusPathToTransferId(reply.argumentAt<0>().path());
 }
 
 DBLUETOOTH_END_NAMESPACE
