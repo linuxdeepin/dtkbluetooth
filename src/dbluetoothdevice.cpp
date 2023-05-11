@@ -146,8 +146,10 @@ QBluetoothDeviceInfo DDevice::deviceInfo() const
     info.setRssi(d->m_device->RSSI());
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     info.setServiceUuids(uuidList);
-#else
+#elif QT_VERSION >= QT_VERSION_CHECK(5, 13, 0)
     info.setServiceUuids(uuidList.toVector());
+#else
+    info.setServiceUuids(uuidList, QBluetoothDeviceInfo::DataComplete);
 #endif
     return info;
 }
