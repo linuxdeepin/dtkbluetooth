@@ -69,7 +69,7 @@ quint64 DObexTransfer::transferred() const
 QFileInfo DObexTransfer::filename() const
 {
     D_DC(DObexTransfer);
-    return d->m_obextransfer->filename();
+    return QFileInfo{d->m_obextransfer->filename()};
 }
 
 QString DObexTransfer::type() const

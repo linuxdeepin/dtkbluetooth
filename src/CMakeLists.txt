@@ -1,9 +1,9 @@
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+# SPDX-FileCopyrightText: 2022 - 2023 UnionTech Software Technology Co., Ltd.
 #
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 
-file(GLOB_RECURSE INCLUDE_FILES "../include/*.h")
+file(GLOB_RECURSE INCLUDE_FILES "${PROJECT_SOURCE_DIR}/include/*.h")
 file(GLOB_RECURSE SRCS
     "./*.h"
     "./*.cpp"
@@ -39,7 +39,7 @@ target_link_libraries(${LIB_NAME} PUBLIC
     Qt${QT_VERSION_MAJOR}::Core
     Qt${QT_VERSION_MAJOR}::DBus
     Qt${QT_VERSION_MAJOR}::Bluetooth
-    Dtk::Core
+    Dtk${DTK_VERSION_MAJOR}::Core
 )
 
 set_target_properties(${LIB_NAME} PROPERTIES
@@ -48,13 +48,13 @@ set_target_properties(${LIB_NAME} PROPERTIES
     SOVERSION ${CMAKE_PROJECT_VERSION_MAJOR}
     PUBLIC_HEADER "${INCLUDE_FILES}")
 
-install(TARGETS ${LIB_NAME} EXPORT DtkBluetoothTargets
+install(TARGETS ${LIB_NAME} EXPORT ${DtkBluetooth}Targets
     LIBRARY DESTINATION ${LIBRARY_INSATLL_DIR}
-    PUBLIC_HEADER DESTINATION ${INCLUDE_INSTALL_DIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(EXPORT DtkBluetoothTargets
-    FILE DtkBluetoothTargets.cmake
-    NAMESPACE Dtk::
-    DESTINATION ${ConfigPackageLocation}
+install(EXPORT ${DtkBluetooth}Targets
+    FILE ${DtkBluetooth}Targets.cmake
+    NAMESPACE Dtk${DTK_VERSION_MAJOR}::
+    DESTINATION ${CONFIG_CMAKE_INSTALL_DIR}
 )

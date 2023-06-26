@@ -8,6 +8,7 @@
 #include "dtkbluetooth_global.h"
 #include <DExpected>
 #include <DObject>
+#include <QObject>
 #include <QBluetoothDeviceInfo>
 
 DBLUETOOTH_BEGIN_NAMESPACE
