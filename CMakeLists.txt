@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 # If do't define version number, specify the version number
-set(DTK_VERSION "5.0.0" CACHE STRING "define project version")
+set(DTK_VERSION "5.6.12" CACHE STRING "define project version")
 
 project(DtkBluetooth
     LANGUAGES CXX
@@ -14,8 +14,6 @@ project(DtkBluetooth
     VERSION ${DTK_VERSION}
 )
 
-set(LIB_NAME dtkbluetooth)
-
 if(${PROJECT_VERSION_MAJOR} STREQUAL "5")
     set(QT_VERSION_MAJOR "5")
 elseif(${PROJECT_VERSION_MAJOR} STREQUAL "6")
@@ -23,6 +21,12 @@ elseif(${PROJECT_VERSION_MAJOR} STREQUAL "6")
     set(DTK_VERSION_MAJOR "6")
 endif()
 
+# Install settings
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX /usr)
+endif()
+
+set(LIB_NAME dtk${DTK_VERSION_MAJOR}bluetooth)
 set(DtkBluetooth Dtk${DTK_VERSION_MAJOR}Bluetooth)
 
 # specify install dir
@@ -37,13 +41,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wall -Wextra")
 set(CMAKE_SHARED_LINKER_FLAGS ${CMAKE_SHARED_LINKER_FLAGS} "-Wl,--as-needed")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR}/dtk${DTK_VERSION_MAJOR}/DBluetooth)
-set(LIBRARY_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/${DtkBluetooth} CACHE STRING "Install dir for cmake config files")
+set(INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR}/dtk${DTK_VERSION_MAJOR}/DBluetooth)
+set(LIBRARY_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR} CACHE STRING "Install dir for cmake config files")
 set(CONFIG_CMAKE_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${DtkBluetooth}" CACHE STRING "Install dir for cmake config files")
-# Install settings
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX /usr)
-endif()
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose Debug or Release" FORCE)
@@ -89,18 +89,17 @@ write_basic_package_version_file(
 configure_package_config_file(misc/DtkBluetoothConfig.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/${DtkBluetooth}Config.cmake
     INSTALL_DESTINATION ${CONFIG_CMAKE_INSTALL_DIR}
-    PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR
+    PATH_VARS INCLUDE_INSTALL_DIR LIBRARY_INSTALL_DIR
 )
 
 # for pc file config
 set(PC_LIBS_PRIVATE Qt${QT_VERSION_MAJOR}Core)
-set(PC_REQ_PRIVATE)
-set(PC_REQ_PUBLIC)
+set(PC_REQ_PUBLIC "dtkcore")
 
 # config pkgconfig file
 set(PC_REQUIRES "Qt${QT_VERSION_MAJOR}Core Qt${QT_VERSION_MAJOR}DBus Qt${QT_VERSION_MAJOR}Bluetooth dtkcore")
 configure_file(misc/${LIB_NAME}.pc.in ${LIB_NAME}.pc @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LIB_NAME}.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LIB_NAME}.pc DESTINATION ${LIBRARY_INSTALL_DIR}/pkgconfig)
 # config cmake file
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DtkBluetooth}Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/${DtkBluetooth}ConfigVersion.cmake DESTINATION ${CONFIG_CMAKE_INSTALL_DIR})
 
@@ -108,6 +107,6 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DtkBluetooth}Config.cmake ${CMAKE_CU
 set(DTK_MODULE ${LIB_NAME})
 set(DTK_DEPS "core dbus dtkcore")
 set(DTK_CFG "v2 ltcg")
-set(QMKSPECS_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/qt${QT_VERSION_MAJOR}/mkspecs/modules" CACHE STRING "INSTALL DIR FOR qt pri files")
+set(QMKSPECS_INSTALL_DIR "${LIBRARY_INSTALL_DIR}/qt${QT_VERSION_MAJOR}/mkspecs/modules" CACHE STRING "INSTALL DIR FOR qt pri files")
 configure_file(misc/qt_lib_${LIB_NAME}.pri.in qt_lib_${LIB_NAME}.pri @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qt_lib_${LIB_NAME}.pri DESTINATION "${QMKSPECS_INSTALL_DIR}")
