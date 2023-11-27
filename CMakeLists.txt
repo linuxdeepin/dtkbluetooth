@@ -103,7 +103,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${LIB_NAME}.pc DESTINATION ${LIBRARY_I
 # config cmake file
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DtkBluetooth}Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/${DtkBluetooth}ConfigVersion.cmake DESTINATION ${CONFIG_CMAKE_INSTALL_DIR})
 
-# config qmake moudule file
+# config qmake module file
 set(DTK_MODULE ${LIB_NAME})
 set(DTK_DEPS "core dbus dtkcore")
 set(DTK_CFG "v2 ltcg")
